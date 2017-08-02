@@ -21,6 +21,7 @@ module.exports = class Session {
   observe(name, props = {}, options = {}, cb) {
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.key + "/observe";
+    if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
     this.request({
       // if need more, add more here
       name: name,
@@ -30,7 +31,7 @@ module.exports = class Session {
       index: this.index++
     }, options, (err, response, body) => {
       // callback with err and response body
-      if (err.message === EARLY_TERMINATION) {
+      if (err && err.message === EARLY_TERMINATION) {
         if (cb) cb(null, body);
       } else {
         if (cb) cb(err, body);
@@ -42,6 +43,7 @@ module.exports = class Session {
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.key + "/decide";
     let {requestSafeCandidates, allCandidates} = this._formatCandidates(candidates);
+    if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
     this.request({
       // if need more, add more here
       name: name,
@@ -57,7 +59,7 @@ module.exports = class Session {
       //   {indexes: [], ...etc}
       // callback with err and decision, response body
       let defaultDecisions = allCandidates.slice(0, options.limit);
-      if (err.message === EARLY_TERMINATION) {
+      if (err && err.message === EARLY_TERMINATION) {
         // use default
         if(cb) cb(null, options.limit > 1 ? defaultDecisions : defaultDecisions[0], body);
       } else {
@@ -72,14 +74,14 @@ module.exports = class Session {
   }
 
   _formatCandidates(candidates) {
-    let res = { arrCandidates: [], requestSafeCandidates: [] };
+    let res = { allCandidates: [], requestSafeCandidates: [] };
     if (!candidates) return res;
 
     if (utils.isArray(candidates)) {
-      res.arrCandidates = candidates;
+      res.allCandidates = candidates;
       res.requestSafeCandidates = candidates.map(c => utils.isObject(c) ? c : {value: c});
     } else if (utils.isObject(candidates)) {
-      res.arrCandidates = utils.combinations(candidates);
+      res.allCandidates = utils.combinations(candidates);
       res.requestSafeCandidates = [candidates];
     }
 
