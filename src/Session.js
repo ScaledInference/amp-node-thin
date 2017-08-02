@@ -14,13 +14,13 @@ export class Session {
     }
 
     observe(name, properties, options, cb) {
-        let url = this.options.domain + this.options.apiPath + "/observe";
+        let url = options.domain || this.options.domain + options.apiPath || this.options.apiPath + "/observe";
         let body = {
             name, 
             properties, 
             userId: this.userId,
             sessionId: this.sessionId,
-            index: this.index,
+            index: ++this.index,
             client: { "Node":Version }
         };
 
@@ -36,13 +36,16 @@ export class Session {
     }
 
     decide(name, candidates, options, cb) {
-        let url = this.options.domain + this.options.apiPath + "/decide";
+        let url = options.domain || this.options.domain + options.apiPath || this.options.apiPath + "/decide";
         let body = {
             name, 
-            decision: candidates,
+            decision: {
+                candidates,
+                limit: 1
+            },
             userId: this.userId,
             sessionId: this.sessionId,
-            index: this.index,
+            index: ++this.index,
             client: { "Node":Version }
         };
 
