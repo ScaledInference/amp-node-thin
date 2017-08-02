@@ -1,0 +1,11 @@
+{
+  "name": "amp-node-thin",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:ScaledInference/amp-node-thin.git",
+  "author": "Tao <tao@scaledinference.com>",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.81.0"
+  }
+}
