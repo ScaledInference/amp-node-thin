@@ -1,0 +1,31 @@
+{
+  "name": "amp-node-thin",
+  "version": "1.0.0",
+  "description": "Amp Thin Client - Node",
+  "main": "index.js",
+  "license": "scaledinference.com/license",
+  "scripts": {
+    "example": "node example/example.js",
+    "test": "nyc mocha --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ScaledInference/amp-node-thin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ScaledInference/amp-node-thin/issues"
+  },
+  "homepage": "https://github.com/ScaledInference/amp-node-thin#readme",
+  "dependencies": {
+    "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "express": "^4.15.2",
+    "mocha": "^3.2.0",
+    "nyc": "^10.2.0"
+  },
+  "engines": {
+    "node": ">=4.1.1"
+  }
+}
