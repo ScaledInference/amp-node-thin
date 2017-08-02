@@ -1,37 +1,11 @@
 "use strict";
 /**
- * Utils, a singleton class contains all utilities amp needs, also support extend by `Utils.register`.
+ * Utils, a utility class for Node Thin Client.
  */
-
-
-// All errors we will use.
-const ERRORS = {
-  INVALID_REQUEST_HANDLER: "Invalid Request Handler Passed In!",
-  INVALID_STORAGE_HANDLER: "Invalid Storage Handler Passed In!",
-  MISSING_EVENT_NAME: "Event Name IS Required!",
-  INVALID_CANDIDATE: "Invalid Candidates!",
-  UNRECOGNIZE_FUNCTION: "Unrecognized Function Found!"
-};
 
 const URL_REGEX = /\(?(?:(http|https|ftp):\/\/)?(?:((?:[^\W\s]|\.|-|[:]{1})+)@{1})?((?:www.)?(?:[^\W\s]|\.|-)+[\.][^\W\s]{2,4}|localhost(?=\/)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::(\d*))?([\/]?[^\s\?]*[\/]{1})*(?:\/?([^\s\n\?\[\]\{\}\#]*(?:(?=\.)){1}|[^\s\n\?\[\]\{\}\.\#]*)?([\.]{1}[^\s\?\#]*)?)?(?:\?{1}([^\s\n\#\[\]]*))?([\#][^\s\n]*)?\)?/;
 
-// the singleton instance
-let utils;
-
-class Utils {
-  constructor() {
-    // SINGLETON
-    if (utils) return utils;
-
-    // methods that should not be overwritten
-    // can be updated later so put into into instance directly
-    this.protectedMethods = ["Events", "error", "merge", "deepMerge", "hashCode", "combinations", "result"];
-
-    this.ERRORS = ERRORS;
-
-    // SINGLETON
-    utils = this;
-  }
+export default class Utils {
 
   /**
    * error hanlder, will handle errors based on different option.
@@ -352,7 +326,7 @@ class Utils {
    * @param {String} charset 
    * @returns {String}
    */
-  randomString(length, charset) {
+  static randomString(length, charset) {
     length = length || 16; charset = charset || "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     let text = "";
@@ -634,5 +608,3 @@ class Utils {
     }
   }
 }
-
-module.exports = Utils;

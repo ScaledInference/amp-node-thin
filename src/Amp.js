@@ -1,6 +1,6 @@
-const Session = require("./Session");
+import Session from "./Session";
 
-export class Amp {
+export default class Amp {
     constructor(projectKey, options) {
         this.projectKey = projectKey;
 

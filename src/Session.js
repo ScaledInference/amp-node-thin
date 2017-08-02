@@ -1,10 +1,10 @@
-const request = require("request");
-const Utils = require("./Utils");
-const Version = require("./Version");
+import request from "request";
+import Utils from "./Utils";
+import Version from "./Version";
 
-export class Session {
+export default class Session {
     constructor(options) {
-        this.amp = amp;
+        this.amp = options.amp;
         this.options = options;
         this.index = 1;
         this.timeout = options.timeout || 1000;
@@ -14,7 +14,7 @@ export class Session {
     }
 
     observe(name, properties, options, cb) {
-        let url = options.domain || this.options.domain + options.apiPath || this.options.apiPath + "/observe";
+        let url = this.options.domain + this.options.apiPath + "/observe";
         let body = {
             name, 
             properties, 
@@ -36,7 +36,7 @@ export class Session {
     }
 
     decide(name, candidates, options, cb) {
-        let url = options.domain || this.options.domain + options.apiPath || this.options.apiPath + "/decide";
+        let url = this.options.domain + this.options.apiPath + "/decide";
         let body = {
             name, 
             decision: {
