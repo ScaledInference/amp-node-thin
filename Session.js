@@ -24,7 +24,7 @@ module.exports = class Session {
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/observe";
     if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
-    console.log(options);
+
     this.request({
       // if need more, add more here
       name: name,
@@ -51,6 +51,7 @@ module.exports = class Session {
     this.request({
       // if need more, add more here
       name: name,
+      key: this.amp.key,
       sessionId: this.id,
       userId: this.userId,
       decision: {

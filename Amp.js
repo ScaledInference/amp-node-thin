@@ -10,7 +10,7 @@ module.exports = class Amp {
     this.domain = options.domain || "https://dev.amp.ai"; //https://amp.ai";
     if (!this.domain) throw new Error("Domain Needed!");
 
-    this.apiPath = options.apiPath || "/api/ampagent/v1/";
+    this.apiPath = options.apiPath || "/api/core/v1/";
     this.userId = options.userId;
     this.timeout = options.timeout;
 
