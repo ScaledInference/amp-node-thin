@@ -5,6 +5,7 @@
   "repository": "git@github.com:ScaledInference/amp-node-thin.git",
   "author": "Tao <tao@scaledinference.com>",
   "license": "MIT",
+  "scripts":{ "test": "jasmine"  },
   "dependencies": {
     "jasmine": "^2.7.0",
     "request": "^2.81.0",

@@ -7,17 +7,19 @@ module.exports = class Amp {
     this.key = options.key;
     if (!this.key) throw new Error("Project Key Needed!");
 
-    this.domain = options.domain || "https://amp.ai";
+    this.domain = options.domain || "https://dev.amp.ai"; //https://amp.ai";
     if (!this.domain) throw new Error("Domain Needed!");
 
-    this.apiPath = options.apiPath || "/api/v1/";
+    this.apiPath = options.apiPath || "/api/ampagent/v1/";
     this.userId = options.userId;
     this.timeout = options.timeout;
+
+    this.options = options;
 
     // the Session Constructor
     let _this = this;
     this.Session = function(sessionOptions = {}) {
-      let opts = {};
+      let opts = Object.assign({}, sessionOptions);
 
       // resume
       if (typeof sessionOptions === "string") {
