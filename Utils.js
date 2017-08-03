@@ -1,3 +1,5 @@
+"use strict";
+
 // the singleton utils instance
 let utils;
 
@@ -202,6 +204,87 @@ class Utils {
     }
 
     return combinations;
+  }
+
+  /**
+   * 
+   * @param {Boolean} [deep] - deep merge mode
+   * @param {Object} target - target object of the merging
+   * @param {...Object} source - source objects of the merging
+   * @returns {Object} merged object
+   * @example
+   *
+   *
+   * // shallow merge, similiar to Object.assign
+   * merge({a: 1}, {a: 2}); // {a: 2}
+   * merge(false, {a: 1}, {a: 2}); // {a: 2}
+   * merge({a: {a: 1}}, {a: {b: 2}}); // {a: {b: 2}};
+   *
+   * // deep merge
+   * merge(true, {a: {a: 1}}, {a: {b: 2}}); // {a: {a: 1, b: 2}}
+   *
+   */
+  merge(deep, target) {
+    let sources;
+    if (deep === true) {
+      // deep merge
+      // es5 for spread operator
+      sources = Array.prototype.slice.call(arguments, 2);
+
+      if (target == null || this.isPrimitive(target)) target = {};
+
+      // iterate every source object in sources
+      sources.forEach(source => {
+        if (this.isObject(source) || this.isArray(source)) {
+          for (let key in source) {
+            if (!source.hasOwnProperty(key)) continue;
+
+            // array first
+            if (this.isArray(source[key])) {
+              target[key] = this.result(target[key], "array");
+              this.merge(true, target[key], source[key]);
+
+              // plain objects
+            } else if (this.isObject(source[key]) && source[key].constructor === Object) {
+              target[key] = this.result(target[key], "object");
+              this.merge(true, target[key], source[key]);
+
+              // for primitive/function/complex objects, just overwrite
+            } else {
+              target[key] = source[key];
+            }
+          }
+        }
+      });
+
+    } else {
+      // shallow merge
+      if (deep === false) {
+        // specified deep
+        sources = Array.prototype.slice.call(arguments, 2);
+      } else {
+        // use as default(without deep)
+        target = deep;
+        sources = Array.prototype.slice.call(arguments, 1);
+      }
+      sources.forEach(source => {
+        for (let key in source) {
+          if (source.hasOwnProperty(key)) {
+            target[key] = source[key];
+          }
+        }
+      });
+    }
+    return target;
+  }
+
+  /**
+   * deepMerge, a short cut of `merge` with recursively enabled by default.
+   * @returns {Object}
+   */
+  deepMerge() {
+    // default deep to true
+    return this.merge.bind(this, true).apply(this, arguments);
   }
 }
 

@@ -1,3 +1,5 @@
+"use strict";
+
 const request = require("request");
 const Utils = require("./Utils");
 const EARLY_TERMINATION = "EARLY_TERMINATION";
@@ -20,15 +22,17 @@ module.exports = class Session {
 
   observe(name, props = {}, options = {}, cb) {
     options.timeout = options.timeout || this.timeout;
-    options.url = this.amp.domain + this.amp.apiPath + this.key + "/observe";
+    options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/observe";
     if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
+
     this.request({
       // if need more, add more here
       name: name,
       sessionId: this.id,
       userId: this.userId,
       properties: props,
-      index: this.index++
+      index: this.index++,
+      key: this.amp.key
     }, options, (err, response, body) => {
       // callback with err and response body
       if (err && err.message === EARLY_TERMINATION) {
@@ -41,12 +45,13 @@ module.exports = class Session {
 
   decide(name, candidates = [], options = {}, cb) {
     options.timeout = options.timeout || this.timeout;
-    options.url = this.amp.domain + this.amp.apiPath + this.key + "/decide";
+    options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/decide";
     let {requestSafeCandidates, allCandidates} = this._formatCandidates(candidates);
     if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
     this.request({
       // if need more, add more here
       name: name,
+      key: this.amp.key,
       sessionId: this.id,
       userId: this.userId,
       decision: {

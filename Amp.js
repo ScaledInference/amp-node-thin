@@ -1,3 +1,5 @@
+"use strict";
+
 const Session = require("./Session");
 
 module.exports = class Amp {
@@ -8,14 +10,16 @@ module.exports = class Amp {
     this.domain = options.domain || "https://amp.ai";
     if (!this.domain) throw new Error("Domain Needed!");
 
-    this.apiPath = options.apiPath || "/api/v1/";
+    this.apiPath = options.apiPath || "/api/core/v1/";
     this.userId = options.userId;
     this.timeout = options.timeout;
+
+    this.options = options;
 
     // the Session Constructor
     let _this = this;
     this.Session = function(sessionOptions = {}) {
-      let opts = {};
+      let opts = Object.assign({}, sessionOptions);
 
       // resume
       if (typeof sessionOptions === "string") {
