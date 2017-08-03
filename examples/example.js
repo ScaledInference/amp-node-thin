@@ -1,9 +1,3 @@
-# amp-node-thin
-
-
-## Usage
-
-``` javascript
 console.log(`
 This will demonstrate how to use the node thin client to communicate with amp agent. Make sure you pass in a valid project key and your domain to your amp agent, if you use a different apiPath, make sure you pass that too.
 `);
@@ -67,6 +61,8 @@ Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stri
   `);
 });
 
+
+
 // send another observe to observe user interaction to help improve decide
 // so we will build the model to help you make better decision on which template should be the best choice for which type of users and will give you the highest or lowest click on `SignUp`
 se.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
@@ -74,4 +70,3 @@ se.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
 ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
   `);
 });
-```

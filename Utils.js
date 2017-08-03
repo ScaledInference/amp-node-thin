@@ -194,7 +194,7 @@ class Utils {
           // Subsequent hits split combinations by the number of values
         } else {
           combinations = combinations.map(item => values.map(value => {
-            return this.merge({ [key]: value }, item);
+            return Object.assign({ [key]: value }, item);
           })).reduce((memo, itemArray) => memo.concat(itemArray), []);
         }
 
