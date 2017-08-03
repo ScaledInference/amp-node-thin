@@ -6,6 +6,8 @@
   "author": "Tao <tao@scaledinference.com>",
   "license": "MIT",
   "dependencies": {
-    "request": "^2.81.0"
+    "jasmine": "^2.7.0",
+    "request": "^2.81.0",
+    "save-dev": "^2.0.0"
   }
 }

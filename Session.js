@@ -1,3 +1,5 @@
+"use strict";
+
 const request = require("request");
 const Utils = require("./Utils");
 const EARLY_TERMINATION = "EARLY_TERMINATION";

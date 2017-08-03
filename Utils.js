@@ -1,3 +1,5 @@
+"use strict";
+
 // the singleton utils instance
 let utils;
 

@@ -1,3 +1,5 @@
+"use strict";
+
 const Session = require("./Session");
 
 module.exports = class Amp {
