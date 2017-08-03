@@ -48,7 +48,7 @@ Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stri
   `);
 });
 
-// you can also send with combiantions
+// you can also send with combinations
 se.decide("TemplateCombo", {
   color: ["red", "green"],
   font: ["bold", "italic"]
