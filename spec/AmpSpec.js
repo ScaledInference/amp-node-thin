@@ -4,7 +4,7 @@ describe("Amp", function(){
     const request = require("request");
     request.debug = true;
 
-    var amp = new Amp( {key: "5a29808ddbbbf896", userId: "ThinNodeTest"} );
+    var amp = new Amp( {key: "c5746225f9d4b191", userId: "ThinNodeTest", domain: "https://dev.amp.ai"} );
     var session = new amp.Session();
 
     it("should make observe call to Amp agent", function(done) {
@@ -16,7 +16,7 @@ describe("Amp", function(){
     });
 
     it("should make decide call to Amp agent", function(done) {
-        session.decide("ObserveTest", {"tao":["awesome", "ok", "worthless"]}, {}, function(error, response) {
+        session.decide("DecideTest", {"tao":["awesome", "ok", "worthless"]}, {}, function(error, response) {
             if (error) { console.log(error); }
             console.log(response);
             done();

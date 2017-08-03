@@ -7,7 +7,7 @@ module.exports = class Amp {
     this.key = options.key;
     if (!this.key) throw new Error("Project Key Needed!");
 
-    this.domain = options.domain || "https://dev.amp.ai"; //https://amp.ai";
+    this.domain = options.domain || "https://amp.ai";
     if (!this.domain) throw new Error("Domain Needed!");
 
     this.apiPath = options.apiPath || "/api/core/v1/";
