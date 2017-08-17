@@ -21,16 +21,25 @@ const apiPath = process.argv[4];
 const amp = new Amp({key: projectKey, domain: domain, apiPath: apiPath});
 
 console.log(`
-amp instance initliazed
+amp instance initialized
 `);
 
 // create a session instance
+// can also specify the `userId`, `timeout` here: {userId: "guestUser"}
 const session = new amp.Session();
 
-// send observe
-session.observe("AmpSession", {"lang": "en", country: "USA"});
+console.log(`
+session instance initliazed
+`);
 
-// send decide
+// send observe with user information
+session.observe("userInfo", {lang: "en", country: "USA"}, function(err) {
+  console.log(`
+UserInfo Observe request sent! ${err ? "Error: " + err : " "}
+  `);
+});
+
+// send decide on which color / font template you want to use
 session.decide("Template", [
   {color: "red", font: "bold"},
   {color: "green", font: "italic"},
@@ -40,19 +49,12 @@ session.decide("Template", [
   // now use the decision
   // decision[0].color
   // decision[0].font
-});
-
-// send another observe to observe user interaction to help improve decide
-session.observe("ClickBtn", {btnName: "SignUp"});
-
-  // decision[0].color
-  // decision[0].font
   console.log(`
 Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
 
-// you can also send with combiantions
+// you can also send with combinations
 session.decide("TemplateCombo", {
   color: ["red", "green"],
   font: ["bold", "italic"]
@@ -64,6 +66,8 @@ session.decide("TemplateCombo", {
 Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
+
+
 
 // send another observe to observe user interaction to help improve decide
 // so we will build the model to help you make better decision on which template should be the best choice for which type of users and will give you the highest or lowest click on `SignUp`
