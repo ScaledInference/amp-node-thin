@@ -45,12 +45,12 @@ session.decide("Template", [
   {color: "green", font: "italic"},
   {color: "red", font: "italic"},
   {color: "green", font: "bold"}
-], function(err, decision) {
+], function(err, decisions) {
   // now use the decision
-  // decision[0].color
-  // decision[0].font
+  // decisions[0].color
+  // decisions[0].font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions[0])}
   `);
 });
 
@@ -67,6 +67,20 @@ Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stri
   `);
 });
 
+// if you want to limit the number of candidates returned, pass a ```limit``` into the options
+session.decide("TemplateCombo", {
+  color: ["red", "green"],
+  font: ["bold", "italic"]
+}, {
+  limit: 1
+}, function(err, decisions) {
+  // now use the decision
+  // decisions[0].color
+  // decisions[0].font
+  console.log(`
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions[0])}
+  `);
+});
 
 
 // send another observe to observe user interaction to help improve decide
