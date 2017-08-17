@@ -67,7 +67,7 @@ Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stri
   `);
 });
 
-// if you want to limit the number of candidates returned, pass a ```limit``` into the options
+// if you want to limit the number of candidates returned, pass a `limit` into the options
 session.decide("TemplateCombo", {
   color: ["red", "green"],
   font: ["bold", "italic"]
