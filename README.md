@@ -21,8 +21,8 @@ se.decide("Template", [
   {color: "green", font: "bold"}
 ], function(err, decision) {
   // now use the decision
-  // decision.color
-  // decision.font
+  // decision[0].color
+  // decision[0].font
 });
 
 // send another observe to observe user interaction to help improve decide
