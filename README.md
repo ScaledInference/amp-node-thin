@@ -8,13 +8,13 @@
 const amp = new Amp({key: "YOUR_KEY", domain: "YOUR HOST NAME"});
 
 // create a session instance
-const se = new amp.Session();
+const session = new amp.Session();
 
 // send observe
-se.observe("AmpSession", {"lang": "en", country: "USA"});
+session.observe("AmpSession", {"lang": "en", country: "USA"});
 
 // send decide
-se.decide("Template", [
+session.decide("Template", [
   {color: "red", font: "bold"},
   {color: "green", font: "italic"},
   {color: "red", font: "italic"},
@@ -26,5 +26,5 @@ se.decide("Template", [
 });
 
 // send another observe to observe user interaction to help improve decide
-se.observe("ClickBtn", {btnName: "SignUp"});
+session.observe("ClickBtn", {btnName: "SignUp"});
 ```
