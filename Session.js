@@ -66,13 +66,13 @@ module.exports = class Session {
       let defaultDecisions = allCandidates.slice(0, options.limit);
       if (err && err.message === EARLY_TERMINATION) {
         // use default
-        if(cb) cb(null, options.limit > 1 ? defaultDecisions : defaultDecisions[0], body);
+        if(cb) cb(null, defaultDecisions, body);
       } else {
         if (err || (!body || !body.index)) {
-          if(cb) cb(err, options.limit > 1 ? defaultDecisions : defaultDecisions[0], body);
+          if(cb) cb(err, defaultDecisions, body);
         } else {
           let decisions = body.indexes.map(v => allCandidates[v]);
-          if (cb) cb(null, options.limit > 1 ? decisions: decisions[0], body);
+          if (cb) cb(null, decisions, body);
         }
       }
     });
