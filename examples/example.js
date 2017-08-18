@@ -15,57 +15,73 @@ const apiPath = process.argv[4];
 const amp = new Amp({key: projectKey, domain: domain, apiPath: apiPath});
 
 console.log(`
-amp instance initliazed
+amp instance initialized
 `);
 
 // create a session instance
 // can also specify the `userId`, `timeout` here: {userId: "guestUser"}
-const se = new amp.Session();
+const session = new amp.Session();
 
 console.log(`
 session instance initliazed
 `);
 
 // send observe with user information
-se.observe("userInfo", {lang: "en", country: "USA"}, function(err) {
+session.observe("userInfo", {lang: "en", country: "USA"}, function(err) {
   console.log(`
 UserInfo Observe request sent! ${err ? "Error: " + err : " "}
   `);
 });
 
 // send decide on which color / font template you want to use
-se.decide("Template", [
+session.decide("Template", [
   {color: "red", font: "bold"},
   {color: "green", font: "italic"},
   {color: "red", font: "italic"},
   {color: "green", font: "bold"}
-], function(err, decision) {
+], function(err, decisions) {
   // now use the decision
-  // decision.color
-  // decision.font
+  // decisions[0].color
+  // decisions[0].font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions[0])}
   `);
 });
 
 // you can also send with combinations
-se.decide("TemplateCombo", {
+session.decide("TemplateCombo", {
   color: ["red", "green"],
   font: ["bold", "italic"]
-}, function(err, decision) {
+}, function(err, decisions) {
   // now use the decision
-  // decision.color
-  // decision.font
+  // decision[0].color
+  // decision[0].font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions[0])}
+  `);
+});
+
+// if you want to limit the number of candidates returned, pass a `limit` into the options
+session.decide("TemplateCombo", {
+  color: ["red", "green"],
+  font: ["bold", "italic"]
+}, {
+  limit: 2
+}, function(err, decisions) {
+  // now use the decision
+  // decisions[0].color
+  // decisions[0].font
+  // decisions[1].color
+  // decisions[1].font
+  console.log(`
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions[0])} and ${JSON.stringify(decisions[1])}
   `);
 });
 
 
-
 // send another observe to observe user interaction to help improve decide
 // so we will build the model to help you make better decision on which template should be the best choice for which type of users and will give you the highest or lowest click on `SignUp`
-se.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
+session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
   console.log(`
 ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
   `);
