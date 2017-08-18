@@ -80,7 +80,7 @@ session.decide("TemplateCombo", {
   // decisions[1].color
   // decisions[1].font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions[0])} and ${JSON.stringify(decision[1])}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions[0])} and ${JSON.stringify(decisions[1])}
   `);
 });
 
