@@ -66,13 +66,15 @@ session.decide("TemplateCombo", {
   color: ["red", "green"],
   font: ["bold", "italic"]
 }, {
-  limit: 1
+  limit: 2
 }, function(err, decisions) {
   // now use the decision
   // decisions[0].color
   // decisions[0].font
+  // decisions[1].color
+  // decisions[1].font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions[0])}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions[0])} and ${JSON.stringify(decision[1])}
   `);
 });
 
