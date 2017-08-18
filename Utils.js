@@ -286,6 +286,37 @@ class Utils {
     // default deep to true
     return this.merge.bind(this, true).apply(this, arguments);
   }
+
+    /**
+   *
+   * @param {*} o - can be any thing, if function, will resolve before going to next step
+   * @param {String} [ensureType] - expected type
+   * @param {Object} [context] - context used if o is function
+   * @returns {*}
+   * @example
+   *
+   * result("aaa", "string"); // "aaa"
+   * result("aaa", "number"); // NaN
+   * result("12aaa", "number"); // 12
+   * result("aaa", "Object"); // {}
+   * result("aaa", "array"); // []
+   */
+  result(o, ensureType, context) {
+    if (this.isFunction(o)) o = o.call(context);
+    if (!this.isString(ensureType)) ensureType = "";
+
+    ensureType = ensureType.toLowerCase();
+
+    if (ensureType === "array") {
+      return this.isArray(o) ? o : [];
+    } else if (ensureType === "object") {
+      return this.isObject(o) ? o : {};
+    } else if (ensureType === "number") {
+      return parseFloat(o);
+    }
+
+    return o;
+  }
 }
 
 module.exports = Utils;
