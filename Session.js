@@ -44,10 +44,13 @@ module.exports = class Session {
   }
 
   decide(name, candidates = [], options = {}, cb) {
+    options.limit = options.limit || 1;
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/decide";
     let {requestSafeCandidates, allCandidates} = this._formatCandidates(candidates);
-    if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
+    if (utils.isFunction(arguments[arguments.length - 1])) {
+      cb = arguments[arguments.length - 1];
+    }
     this.request({
       // if need more, add more here
       name: name,

@@ -29,7 +29,7 @@ module.exports = class Amp {
       opts.amp = _this;
       opts.userId = sessionOptions.userId || _this.userId;
       opts.timeout = sessionOptions.timeout || _this.timeout;
-      opts.ttl = sessionOptions.ttl;
+      opts.ttl = sessionOptions.ttl || _this.options.ttl;
 
       return new Session(opts);
     }
