@@ -14,8 +14,8 @@ describe("Session", function(){
                 console.log(error); 
                 done();
             }
-            console.log(response);
-            expect(response).to.contain("OK");
+
+            expect(response).to.eql({});
             done();
         });
     });
@@ -26,7 +26,6 @@ describe("Session", function(){
                 console.log(error); 
                 done();
             }
-            console.log(response); // response should be array
 
             expect(decisions.length).to.equal(1);
             expect(decisions[0].tao).to.equal("awesome");
@@ -40,7 +39,6 @@ describe("Session", function(){
             if (error) { 
                 console.log(error); 
             }
-            console.log(response); // response should be array
 
             expect(decisions.length).to.equal(1);
             expect(decisions[0].tao).to.equal("awesome");
@@ -55,7 +53,6 @@ describe("Session", function(){
                 console.log(error); 
                 done();
             }
-            console.log(response); // response should be array
 
             expect(decisions.length).to.equal(3);
             expect(decisions[0].tao).to.equal("awesome");
@@ -70,7 +67,6 @@ describe("Session", function(){
                 console.log(error); 
                 done();
             }
-            console.log(response);
 
             expect(decisions[0].tao).to.equal("awesome");
             done();
