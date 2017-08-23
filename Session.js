@@ -48,9 +48,16 @@ module.exports = class Session {
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/decide";
     let {requestSafeCandidates, allCandidates} = this._formatCandidates(candidates);
+
+    if (requestSafeCandidates.length > 50) {
+      cb({message: "Candidate length must be less than 50."}, requestSafeCandidates[0]);
+      return;
+    }
+
     if (utils.isFunction(arguments[arguments.length - 1])) {
       cb = arguments[arguments.length - 1];
     }
+    
     this.request({
       // if need more, add more here
       name: name,
@@ -86,11 +93,11 @@ module.exports = class Session {
     if (!candidates) return res;
 
     if (utils.isArray(candidates)) {
-      res.allCandidates = candidates.slice(0, 50);
-      res.requestSafeCandidates = candidates.map(c => utils.isObject(c) ? c : {value: c}).slice(0, 50);
+      res.allCandidates = candidates;
+      res.requestSafeCandidates = candidates.map(c => utils.isObject(c) ? c : {value: c});
     } else if (utils.isObject(candidates)) {
-      res.allCandidates = utils.combinations(candidates).slice(0, 50);
-      res.requestSafeCandidates = [candidates].slice(0, 50);
+      res.allCandidates = utils.combinations(candidates);
+      res.requestSafeCandidates = [candidates];
     }
 
     return res;
