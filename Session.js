@@ -86,11 +86,11 @@ module.exports = class Session {
     if (!candidates) return res;
 
     if (utils.isArray(candidates)) {
-      res.allCandidates = candidates;
-      res.requestSafeCandidates = candidates.map(c => utils.isObject(c) ? c : {value: c});
+      res.allCandidates = candidates.slice(0, 50);
+      res.requestSafeCandidates = candidates.map(c => utils.isObject(c) ? c : {value: c}).slice(0, 50);
     } else if (utils.isObject(candidates)) {
-      res.allCandidates = utils.combinations(candidates);
-      res.requestSafeCandidates = [candidates];
+      res.allCandidates = utils.combinations(candidates).slice(0, 50);
+      res.requestSafeCandidates = [candidates].slice(0, 50);
     }
 
     return res;
