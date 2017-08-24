@@ -53,8 +53,10 @@ module.exports = class Session {
       cb = arguments[arguments.length - 1];
     }
 
-    if (cb && requestSafeCandidates.length > 50) {
-      cb({message: "Candidate length must be less than 50."}, requestSafeCandidates);
+    if (!cb) return;
+
+    if (cb && allCandidates.length > 50) {
+      cb(new Error("Candidate length must be less than 50."), allCandidates);
       return;
     }
 
