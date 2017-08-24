@@ -49,15 +49,15 @@ module.exports = class Session {
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/decide";
     let {requestSafeCandidates, allCandidates} = this._formatCandidates(candidates);
 
-    if (requestSafeCandidates.length > 50) {
-      cb({message: "Candidate length must be less than 50."}, requestSafeCandidates[0]);
-      return;
-    }
-
     if (utils.isFunction(arguments[arguments.length - 1])) {
       cb = arguments[arguments.length - 1];
     }
-    
+
+    if (cb && requestSafeCandidates.length > 50) {
+      cb({message: "Candidate length must be less than 50."}, requestSafeCandidates);
+      return;
+    }
+
     this.request({
       // if need more, add more here
       name: name,
