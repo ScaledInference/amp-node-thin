@@ -58,7 +58,7 @@ module.exports = class Session {
         cb(new Error("Candidate length must be less than or equal to 50."), allCandidates);
       }
 
-      return allCandidates[0].slice(0, 1);
+      return allCandidates.slice(0, 1);
     }
 
     this.request({
