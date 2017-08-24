@@ -55,7 +55,7 @@ module.exports = class Session {
 
     if (allCandidates.length > 50) {
       if (cb) {
-        cb(new Error("Candidate length must be less than 50."), allCandidates);
+        cb(new Error("Candidate length must be less than or equal to 50."), allCandidates);
       }
 
       return [allCandidates[0]];
