@@ -73,4 +73,27 @@ describe("Session", function(){
         });
     });
 
+    it("should return error and default decision immediately if candidates sent in decide are greater than 50", function() {
+        let decisions = {};
+
+        for (let i in 51) {
+            if (i < 15) {
+                decisions["a"] = i;
+            } else if (i < 35) {
+                decisions["b"] = i;
+            } else {
+                decisions["c"] = i;
+            }
+        }
+
+        session.decide("MaxedCandidates", decisions, function(error, decisions, response) {
+            if (error) {
+                expect(error.message).to.eql("Candidate length must be less than 50.");
+                expect(decisions[0]).to.eql({a:0});
+            } else {
+                expect().fail();
+            }
+        });
+    });
+
 });
