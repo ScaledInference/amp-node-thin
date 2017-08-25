@@ -90,7 +90,7 @@ module.exports = class Session {
       }
     });
 
-    return options.limit == 1 ? [allCandidates[0]] : allCandidates.slice(0, options.limit);
+    return allCandidates.slice(0, options.limit);
   }
 
   _formatCandidates(candidates) {
