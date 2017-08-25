@@ -6,7 +6,7 @@
   "author": "Tao <tao@scaledinference.com>",
   "license": "MIT",
   "scripts": {
-    "coverage": "find ./tests -name '*.test.js' | xargs nyc --reporter=html --reporter=text mocha "
+    "tests": "find ./tests -name '*.test.js' | xargs nyc --reporter=html --reporter=text mocha "
   },
   "dependencies": {
     "save-dev": "^2.0.0"
