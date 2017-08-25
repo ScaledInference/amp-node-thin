@@ -89,7 +89,7 @@ describe("Session", function(){
 
         session.decide("MaxedCandidates", candidates, function(error, decisions, response) {
             if (error) {
-                expect(error.message).to.eql("Candidate length must be less than 50.");
+                expect(error.message).to.eql("Candidate length must be less than or equal to 50.");
                 expect(decisions[0]).to.eql({a:0});
                 done();
             } else {
@@ -116,7 +116,7 @@ describe("Session", function(){
 
         session.decide("MaxedCandidates", candidates, function(error, decisions, response) {
             if (error) {
-                expect(error.message).to.eql("Candidate length must be less than 50.");
+                expect(error.message).to.eql("Candidate length must be less than or equal to 50.");
                 expect(decisions[0]).to.eql({a:0, b: 0, c: 0});
                 done();
             } else {
