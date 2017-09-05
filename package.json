@@ -1,6 +1,6 @@
 {
   "name": "amp-node-thin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "Amp.js",
   "repository": "git@github.com:ScaledInference/amp-node-thin.git",
   "author": "Tao <tao@scaledinference.com>",
