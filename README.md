@@ -1,5 +1,33 @@
 # amp-node-thin
 
+## Testing
+From the root directory:
+
+### Local run
+```node examples/example.js 561e88527bd0a73c https://dev.amp.ai /api/core/v1/```
+### Amp-Agent run
+1. Setup [Amp-Agent](https://docs.google.com/document/d/1d_I37k1j58QVWlFrEY9nUArz6VzQ9D7ceXEDw3IppcY/edit#heading=h.80ir0yzfb9it)
+2. Update Amp-Agent in terminal
+```sudo docker pull scaledinference/ampagent:prod-latest```
+3. Run Amp-Agent (Don't substitute key.  Leave as is)
+```
+sudo docker run -d -t -i -e AMPAGENT_KEY="KEY" -p 8100:8100 \
+    --memory="2.5g" --memory-swap="2.5g" --sysctl net.core.somaxconn=1024 \
+    --name ampagent scaledinference/ampagent:prod-latest
+```
+4. Run Watchtower
+```
+sudo docker run -d --name watchtower \
+    -v /var/run/docker.sock:/var/run/docker.sock v2tec/watchtower ampagent
+```
+5. Verify Container is running
+```
+sudo docker ps -a
+```
+6. Run example from root directory of Node Thin Client 
+```
+node ./examples/example.js <project key> http://<amp-agent-hostname:8100>
+```
 
 ## Usage
 
