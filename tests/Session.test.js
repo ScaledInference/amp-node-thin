@@ -11,70 +11,112 @@ describe("Session", function(){
     it("should make observe call to Amp agent", function(done) {
         session.observe("ObserveTest", {"tao":"awesome"}, {}, function(error, response) {
             if (error) { 
-                console.log(error); 
+                expect().fail();
                 done();
             }
-            console.log(response);
-            expect(response).to.contain("OK");
-            done();
-        });
-    });
 
-    it("should make decide call to Amp agent and return array with single candidate", function(done) {
-        session.decide("DecideTest", {"tao":["awesome", "ok", "worthless"]}, {limit: 1}, function(error, decisions, response) {
-            if (error) { 
-                console.log(error); 
-                done();
-            }
-            console.log(response); // response should be array
-
-            expect(decisions.length).to.equal(1);
-            expect(decisions[0].tao).to.equal("awesome");
-
-            done();
-        });
-    });
-
-    it("should make decide call to Amp agent and return array with single candidate if no limit", function(done) {
-        session.decide("DecideTest", {"tao":["awesome", "ok", "worthless"]}, {}, function(error, decisions, response) {
-            if (error) { 
-                console.log(error); 
-            }
-            console.log(response); // response should be array
-
-            expect(decisions.length).to.equal(1);
-            expect(decisions[0].tao).to.equal("awesome");
-
-            done();
-        });
-    });
-
-    it("should make decide call to Amp agent and return array with all candidates", function(done) {
-        session.decide("DecideTest", {"tao":["awesome", "ok", "worthless"]}, {limit: 3}, function(error, decisions, response) {
-            if (error) { 
-                console.log(error); 
-                done();
-            }
-            console.log(response); // response should be array
-
-            expect(decisions.length).to.equal(3);
-            expect(decisions[0].tao).to.equal("awesome");
-
+            expect(response).to.eql({});
             done();
         });
     });
 
     it("should use default decision if call times out", function(done) {
-        session.decide("DecideTimeoutTest", {"tao":["awesome", "ok", "worthless"]}, {timeout: 1}, function(error, decisions, response) {
+        session.decide("DecideTimeoutTest", {"tao":["awesome", "ok", "worthless"]}, {timeout: 1}, function(error, decision, response) {
             if (error) { 
-                console.log(error); 
+                expect().fail();
                 done();
             }
-            console.log(response);
 
-            expect(decisions[0].tao).to.equal("awesome");
+            expect(decision.tao).to.equal("awesome");
             done();
         });
     });
 
+    it("should return error and default decision immediately if flattened candidates sent in decide are greater than 50", function(done) {
+        let candidates = [];
+
+        for (let i = 0; i < 51; i++) {
+            candidates.push({a: i, b: i, c: i});
+        }
+
+        session.decide("MaxedCandidates", candidates, function(error, decision, response) {
+            if (error) {
+                expect(error.message).to.eql("Candidate length must be less than or equal to 50.");
+                expect(decision).to.eql({a:0, b: 0, c: 0});
+            } else {
+                expect().fail();
+            }
+            done();
+        });
+    });
+
+    it("should return error and default decision immediately in callback if array value candidates sent in decide are greater than 50", function(done) {
+        let candidates = {};
+        let keys = ["a", "b", "c"];
+
+        for (let i = 0; i < keys.length; i++) {
+            let key = keys[i];
+
+            let value = [];
+            for (let j = 0; j < 51; j++) {
+              value[j] = j;    
+            }
+
+            candidates[key] = value;
+        }
+
+        session.decide("MaxedCandidates", candidates, function(error, decision, response) {
+            if (error) {
+                expect(error.message).to.eql("Candidate length must be less than or equal to 50.");
+                expect(decision).to.eql({a:0, b: 0, c: 0});
+            } else {
+                expect().fail();
+            }
+            done();
+        });
+    });
+
+    it("should support sync decision making that returns default decision if candidates over 50", function() {
+        let candidates = {};
+        let keys = ["a", "b", "c"];
+
+        for (let i = 0; i < keys.length; i++) {
+            let key = keys[i];
+
+            let value = [];
+            for (let j = 0; j < 51; j++) {
+              value[j] = j;    
+            }
+
+            candidates[key] = value;
+        }
+
+        let decision = session.decide("SyncMaxedCandidates", candidates);
+        expect(decision).to.eql({a:0, b: 0, c: 0});
+    });
+
+    it("should support sync decision making that returns default decision if candidates under 50", function() {
+        let decision = session.decide("SyncDecide", {first: ["a", "b", "c"], second: ["d", "e", "f"]});
+        expect(decision).to.eql({first: "a", second: "d"});
+    });
+
+    it("should single object in decsion callback or synchronously", function(done) {
+        session.decide("DecideTimeoutTest", {"tao":["awesome", "ok", "worthless"]}, function(error, decision, response) {
+            if (error) { 
+                expect().fail();
+            }
+
+            expect(decision.tao).to.equal("awesome");
+            done();
+        });
+    });
+
+    it("should ignore limit option and always set to 1", function(done) {
+        let decision = session.decide("SyncDecide", {first: ["a", "b", "c"], second: ["d", "e", "f"]}, {limit: 2}, function(error, decision) {
+            expect(decision).to.eql({first: "a", second: "d"});
+            done();
+        });
+
+        expect(decision).to.eql({first: "a", second: "d"});
+    });
 });

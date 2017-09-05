@@ -44,13 +44,23 @@ module.exports = class Session {
   }
 
   decide(name, candidates = [], options = {}, cb) {
-    options.limit = options.limit || 1;
+    options.limit = 1;
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/decide";
     let {requestSafeCandidates, allCandidates} = this._formatCandidates(candidates);
+
     if (utils.isFunction(arguments[arguments.length - 1])) {
       cb = arguments[arguments.length - 1];
     }
+
+    if (allCandidates.length > 50) {
+      if (cb) {
+        cb(new Error("Candidate length must be less than or equal to 50."), allCandidates[0]);
+      }
+
+      return allCandidates[0];
+    }
+
     this.request({
       // if need more, add more here
       name: name,
@@ -66,19 +76,21 @@ module.exports = class Session {
       // body:
       //   {indexes: [], ...etc}
       // callback with err and decision, response body
-      let defaultDecisions = allCandidates.slice(0, options.limit);
+      let defaultDecision = allCandidates[0];
       if (err && err.message === EARLY_TERMINATION) {
         // use default
-        if(cb) cb(null, defaultDecisions, body);
+        if(cb) cb(null, defaultDecision, body);
       } else {
         if (err || (!body || !body.index)) {
-          if(cb) cb(err, defaultDecisions, body);
+          if(cb) cb(err, defaultDecision, body);
         } else {
           let decisions = body.indexes.map(v => allCandidates[v]);
-          if (cb) cb(null, decisions, body);
+          if (cb) cb(null, decisions[0], body);
         }
       }
     });
+
+    return allCandidates[0];
   }
 
   _formatCandidates(candidates) {
