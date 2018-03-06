@@ -46,8 +46,8 @@ session.decide("Template", [
   {color: "green", font: "bold"}
 ], function(err, decisions) {
   // now use the decision
-  // decisions[0].color
-  // decisions[0].font
+  // decisions.color
+  // decisions.font
   console.log(`
 Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions[0])}
   `);
@@ -59,8 +59,8 @@ session.decide("TemplateCombo", {
   font: ["bold", "italic"]
 }, function(err, decisions) {
   // now use the decision
-  // decision[0].color
-  // decision[0].font
+  // decision.color
+  // decision.font
   console.log(`
 Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions[0])}
   `);
@@ -74,10 +74,8 @@ session.decide("TemplateCombo", {
   limit: 2
 }, function(err, decisions) {
   // now use the decision
-  // decisions[0].color
-  // decisions[0].font
-  // decisions[1].color
-  // decisions[1].font
+  // decisions.color
+  // decisions.font
   console.log(`
 Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions[0])} and ${JSON.stringify(decisions[1])}
   `);
