@@ -4,7 +4,7 @@ const request = require("request");
 const Utils = require("./Utils");
 const EARLY_TERMINATION = "EARLY_TERMINATION";
 
-let utils = new Utils();
+const utils = new Utils();
 
 module.exports = class Session {
   constructor(options) {
@@ -12,7 +12,7 @@ module.exports = class Session {
     if (!this.amp) throw new Error("Not the right way to create a session!");
 
     this.id = options.id || utils.randomString();
-    this.context = options.context || [];
+    this.history = options.history || [];
     this.userId = options.userId || utils.randomString(5);
     this.timeout = options.timeout || 1000;
     this.ttl = options.ttl;
@@ -23,6 +23,8 @@ module.exports = class Session {
   observe(name, props = {}, options = {}, cb) {
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/observe";
+
+    // if last argument is a function, then it is a callback
     if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
 
     this.request({
@@ -47,11 +49,10 @@ module.exports = class Session {
     options.limit = 1;
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/decide";
-    let {requestSafeCandidates, allCandidates} = this._formatCandidates(candidates);
 
-    if (utils.isFunction(arguments[arguments.length - 1])) {
-      cb = arguments[arguments.length - 1];
-    }
+    const { requestSafeCandidates, allCandidates } = this._formatCandidates(candidates);
+
+    if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
 
     if (allCandidates.length > 50) {
       if (cb) {
@@ -116,7 +117,7 @@ module.exports = class Session {
       completed = true;
 
       // store into context
-      this.context.push(Object.assign({}, body));
+      this.history.push(Object.assign({}, body));
       this.updated = Date.now();
       if (cb) cb.call(this, new Error(EARLY_TERMINATION))
     }, options.timeout);
@@ -132,7 +133,7 @@ module.exports = class Session {
       completed = true;
 
       // store into context
-      this.context.push(Object.assign({}, body));
+      this.history.push(Object.assign({}, body));
       this.updated = Date.now();
       if (cb) cb.call(this, err, response, rbody);
     });
