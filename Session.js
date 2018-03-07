@@ -116,7 +116,7 @@ module.exports = class Session {
       if (completed) return;
       completed = true;
 
-      // store into context
+      // store into history
       this.history.push(Object.assign({}, body));
       this.updated = Date.now();
       if (cb) cb.call(this, new Error(EARLY_TERMINATION))
@@ -132,7 +132,7 @@ module.exports = class Session {
       if (completed) return;
       completed = true;
 
-      // store into context
+      // store into history
       this.history.push(Object.assign({}, body));
       this.updated = Date.now();
       if (cb) cb.call(this, err, response, rbody);
