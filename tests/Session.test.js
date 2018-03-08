@@ -33,6 +33,8 @@ describe("Session", function(){
     });
 
     it("should return error and default decision immediately if flattened candidates sent in decide are greater than 50", function(done) {
+        this.timeout(3000);
+        
         let candidates = [];
 
         for (let i = 0; i < 51; i++) {
