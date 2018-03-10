@@ -76,14 +76,12 @@ let count = 0;
 let errCount = 0;
 const interval = setInterval(function() {
   session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
-    if (!err) { 
-      count++; 
-    } else  {
+    if (err) { 
       errCount++;
     }
 
     console.log(`
-  ClickBtn Observe request sent!  sent: ${count} errors: ${errCount} ${err ? "Error: " + err : " "}
+  ClickBtn Observe request sent!  sent: ${++count} errors: ${errCount} ${err ? "Error: " + err : " "}
     `);
   });
 }, 1);
