@@ -6,6 +6,7 @@
   "author": "Tao <tao@scaledinference.com>",
   "license": "MIT",
   "scripts": {
+    "example": "node ./examples/example.js d21dce26ffe3f2c3 http://localhost:8100";
     "test": "find ./tests -name '*.test.js' | xargs nyc --reporter=html --reporter=text mocha "
   },
   "dependencies": {

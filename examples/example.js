@@ -84,3 +84,32 @@ session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
 ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
   `);
 });
+
+// load test
+let count = 0;
+let errCount = 0;
+
+const interval = setInterval(function() {
+  session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
+    if (err) {
+      ++errCount;
+    }
+    console.log(`
+  ClickBtn Observe request sent! Count: ${++count} Error Count: ${errCount} ? "Error: " + err : " "}
+    `);
+  });
+}, 1);
+
+setTimeout(function() {
+  clearInterval(interval);
+}, 1000);
+
+
+// for (let i = 0; i < 500; i++) {
+//   const session = new amp.Session();
+//   session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
+//     console.log(`
+//   ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
+//     `);
+//   });  
+// }
