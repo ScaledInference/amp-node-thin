@@ -125,23 +125,51 @@ module.exports = class Session {
     }, options.timeout);
 
     const url = new URL(options.url);
-    const req = https.request(url, (res) => {
+    const opts = {
+      host: url.host,
+      port: url.port,
+      path: url.path,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': Buffer.byteLength(JSON.stringify(body))
+      },
+      timeout: options.timeout
+    };
+    const requestType = url.protocol.indexOf('http:') != -1 ? http : https;
+    const req = requestType.request(url, (res) => {
       if (completed) return;
       completed = true;
 
-      // store into history
-      this.history.push(Object.assign({}, body));
-      this.updated = Date.now();
+      var data = '';
+      res.setEncoding = 'utf8';
+      
+      res.on('data', (chunk) => {
+        console.log('chunk', chunk);
+        data += chunk;
+      });
 
-      if (cb) cb.call(this, res.err, res, res.body);
+      res.on('error', (e) => {
+        if (cb) cb.call(this, e, res);
+      });
+
+      res.on('end', () => {
+        // store into history
+        this.history.push(Object.assign({}, body));
+        this.updated = Date.now();
+
+        if (cb) cb.call(this, null, res, data);
+      });
     });
 
-    req.method = 'POST';
-    req.headers = {
-      'Content-Type': 'application/json',
-      'Content-Length': Buffer.byteLength(JSON.stringify(body))
-    };
-    req.timeout = options.timeout;
+    req.on('socket', (socket) => {
+      socket.on('error', (e) => {
+        console.log('Socket error: ', e);
+        if (cb) cb.call(this, e);
+        req.abort();
+      });
+    });
+
     req.write(JSON.stringify(body));
     req.end();
 

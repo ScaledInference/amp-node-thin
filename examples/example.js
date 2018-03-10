@@ -57,22 +57,7 @@ session.decide("TemplateCombo", {
   // decision.color
   // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions)}
-  `);
-});
-
-// if you want to limit the number of candidates returned, pass a `limit` into the options
-session.decide("TemplateCombo", {
-  color: ["red", "green"],
-  font: ["bold", "italic"]
-}, {
-  limit: 2
-}, function(err, decisions) {
-  // now use the decision
-  // decisions.color
-  // decisions.font
-  console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions)}
+Template Combo Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions)}
   `);
 });
 
