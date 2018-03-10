@@ -126,6 +126,9 @@ module.exports = class Session {
       method: "POST",
       url: options.url, 
       body: body,
+      headers: {
+        'Content-Length': Buffer.byteLength(JSON.stringify(body))
+      },
       timeout: options.timeout,
       json: true
     }, (err, response, rbody) => {
