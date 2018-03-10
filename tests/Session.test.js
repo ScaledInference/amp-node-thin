@@ -121,4 +121,10 @@ describe("Session", function(){
 
         expect(decision).to.eql({first: "a", second: "d"});
     });
+
+    it("should allow setting userId", function() {
+        amp.session = new amp.Session({userId: 'Yanpu'});
+
+        expect(amp.session.userId).to.equal('Yanpu');
+    });
 });
