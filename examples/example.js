@@ -86,29 +86,37 @@ ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
 });
 
 // load test
-// load test
 let count = 0;
 let errCount = 0;
-for (let i = 0; i < 1000; i++) {
-  //setTimeout(() => {
-    session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
-      if (err) { 
-        errCount++;
-      }
 
-      console.log(`
-    ClickBtn Observe request sent!  sent: ${++count} errors: ${errCount} ${err ? "Error: " + err : " "}
-      `);
-    });
-  //}, i);
-}
+const interval = setInterval(function() {
+  session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
+    if (err) {
+      ++errCount;
+    }
+    console.log(`
+  ClickBtn Observe request sent! Count: ${++count} Error Count: ${errCount} ? "Error: " + err : " "}
+    `);
+  });
+}, 0);
+
+setTimeout(function() {
+  clearInterval(interval);
+}, 10000);
 
 
-// for (let i = 0; i < 500; i++) {
-//   const session = new amp.Session();
-//   session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
-//     console.log(`
-//   ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
-//     `);
-//   });  
+// let count = 0;
+// let errCount = 0;
+// for (let i = 0; i < 1000; i++) {
+//   setTimeout(() => {
+//     session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
+//       if (err) { 
+//         errCount++;
+//       }
+
+//       console.log(`
+//     ClickBtn Observe request sent!  sent: ${++count} errors: ${errCount} ${err ? "Error: " + err : " "}
+//       `);
+//     });
+//   }, i);
 // }
