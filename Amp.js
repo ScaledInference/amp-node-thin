@@ -26,8 +26,8 @@ module.exports = class Amp {
       }
 
       opts.amp = _this;
-      opts.id = sessionOptions.id ;
-      opts.userId = _this.options.userId || sessionOptions.userId;
+      opts.id = sessionOptions.id;
+      opts.userId = sessionOptions.userId || _this.options.userId;
       opts.timeout = sessionOptions.timeout || _this.timeout || 1000;
       opts.ttl = sessionOptions.ttl || _this.options.sessionTTL || 0;
 

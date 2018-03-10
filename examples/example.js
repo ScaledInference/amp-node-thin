@@ -85,6 +85,7 @@ ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
   `);
 });
 
+
 // load test
 const interval = setInterval(function() {
   session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
@@ -97,7 +98,6 @@ const interval = setInterval(function() {
 setTimeout(function() {
   clearInterval(interval);
 }, 1000);
-
 
 // for (let i = 0; i < 500; i++) {
 //   const session = new amp.Session();
