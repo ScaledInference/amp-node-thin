@@ -144,6 +144,10 @@ module.exports = class Session {
     req.timeout = options.timeout;
     req.write(JSON.stringify(body));
     req.end();
+
+    process.on('uncaughtException', function(err) {
+      console.error('Error', err.stack);
+    });
   }
 
   serialize() {
