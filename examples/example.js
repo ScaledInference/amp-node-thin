@@ -57,7 +57,22 @@ session.decide("TemplateCombo", {
   // decision.color
   // decision.font
   console.log(`
-Template Combo Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions)}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions)}
+  `);
+});
+
+// if you want to limit the number of candidates returned, pass a `limit` into the options
+session.decide("TemplateCombo", {
+  color: ["red", "green"],
+  font: ["bold", "italic"]
+}, {
+  limit: 2
+}, function(err, decisions) {
+  // now use the decision
+  // decisions.color
+  // decisions.font
+  console.log(`
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions)}
   `);
 });
 
@@ -70,30 +85,38 @@ ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
   `);
 });
 
-
 // load test
 let count = 0;
 let errCount = 0;
-for (let i = 0; i < 1000; i++) {
-  setTimeout(() => {
-    session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
-      if (err) { 
-        errCount++;
-      }
 
-      console.log(`
-    ClickBtn Observe request sent!  sent: ${++count} errors: ${errCount} ${err ? "Error: " + err : " "}
-      `);
-    });
-  }, i);
-}
+const interval = setInterval(function() {
+  session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
+    if (err) {
+      ++errCount;
+    }
+    console.log(`
+  ClickBtn Observe request sent! Count: ${++count} Error Count: ${errCount} ? "Error: " + err : " "}
+    `);
+  });
+}, 0);
+
+setTimeout(function() {
+  clearInterval(interval);
+}, 10000);
 
 
-// for (let i = 0; i < 500; i++) {
-//   const session = new amp.Session();
-//   session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
-//     console.log(`
-//   ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
-//     `);
-//   });  
+// let count = 0;
+// let errCount = 0;
+// for (let i = 0; i < 1000; i++) {
+//   setTimeout(() => {
+//     session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
+//       if (err) { 
+//         errCount++;
+//       }
+
+//       console.log(`
+//     ClickBtn Observe request sent!  sent: ${++count} errors: ${errCount} ${err ? "Error: " + err : " "}
+//       `);
+//     });
+//   }, i);
 // }
