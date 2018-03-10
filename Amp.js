@@ -1,20 +1,19 @@
 "use strict";
 
 const Session = require("./Session");
+const Utils = require("./Utils");
+
+const utils = new Utils();
 
 module.exports = class Amp {
   constructor(options = {}) {
     this.key = options.key;
     if (!this.key) throw new Error("Project Key Needed!");
 
-    this.domain = options.domain || "https://amp.ai";
-    if (!this.domain) throw new Error("Domain Needed!");
-
     this.apiPath = options.apiPath || "/api/core/v1/";
-    this.userId = options.userId;
-    this.timeout = options.timeout;
-
+    this.domain = options.domain || "https://amp.ai";
     this.options = options;
+    this.timeout = options.timeout;
 
     // the Session Constructor
     let _this = this;
@@ -27,19 +26,24 @@ module.exports = class Amp {
       }
 
       opts.amp = _this;
-      opts.userId = sessionOptions.userId || _this.userId;
-      opts.timeout = sessionOptions.timeout || _this.timeout;
-      opts.ttl = sessionOptions.ttl || _this.options.ttl;
+      opts.id = sessionOptions.id ;
+      opts.userId = sessionOptions.userId || _this.options.userId;
+      opts.timeout = sessionOptions.timeout || _this.timeout || 1000;
+      opts.ttl = sessionOptions.ttl || _this.options.sessionTTL || 0;
 
       return new Session(opts);
     }
 
-    // deserialize a session
+    /**
+     * Deserialize a session
+     * 
+     * @param  {string} str
+     */
     this.Session.deserialize = function(str) {
       try {
         let resumed = JSON.parse(str);
-        if ((resumed.updated && resumed.ttl) && Date.now() - resumed.updated < resumed.ttl) {
-          return new Session(Object.assign(resumed, {amp: _this}));
+        if ((resumed.updated && resumed.ttl) && (Date.now() - resumed.updated < resumed.ttl)) {
+          return new Session(Object.assign(resumed, { amp: _this }));
         } else {
           return new _this.Session();
         }
