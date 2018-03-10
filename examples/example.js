@@ -86,23 +86,22 @@ ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
 });
 
 // load test
+// load test
 let count = 0;
 let errCount = 0;
+for (let i = 0; i < 1000; i++) {
+  //setTimeout(() => {
+    session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
+      if (err) { 
+        errCount++;
+      }
 
-const interval = setInterval(function() {
-  session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
-    if (err) {
-      ++errCount;
-    }
-    console.log(`
-  ClickBtn Observe request sent! Count: ${++count} Error Count: ${errCount} ? "Error: " + err : " "}
-    `);
-  });
-}, 1);
-
-setTimeout(function() {
-  clearInterval(interval);
-}, 1000);
+      console.log(`
+    ClickBtn Observe request sent!  sent: ${++count} errors: ${errCount} ${err ? "Error: " + err : " "}
+      `);
+    });
+  //}, i);
+}
 
 
 // for (let i = 0; i < 500; i++) {
