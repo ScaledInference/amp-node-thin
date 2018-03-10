@@ -72,17 +72,25 @@ ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
 
 
 // load test
-// const interval = setInterval(function() {
-//   session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
-//     console.log(`
-//   ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
-//     `);
-//   });
-// }, 1);
+let count = 0;
+let errCount = 0;
+const interval = setInterval(function() {
+  session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
+    if (!err) { 
+      count++; 
+    } else  {
+      errCount++;
+    }
 
-// setTimeout(function() {
-//   clearInterval(interval);
-// }, 1000);
+    console.log(`
+  ClickBtn Observe request sent!  sent: ${count} errors: ${errCount} ${err ? "Error: " + err : " "}
+    `);
+  });
+}, 1);
+
+setTimeout(function() {
+  clearInterval(interval);
+}, 1000);
 
 
 // for (let i = 0; i < 500; i++) {

@@ -131,7 +131,7 @@ module.exports = class Session {
       path: url.path,
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(JSON.stringify(body))
       },
       timeout: options.timeout
@@ -145,12 +145,11 @@ module.exports = class Session {
       res.setEncoding = 'utf8';
       
       res.on('data', (chunk) => {
-        console.log('chunk', chunk);
         data += chunk;
       });
 
       res.on('error', (e) => {
-        if (cb) cb.call(this, e, res);
+        if (cb) cb.call(this, e, res, data);
       });
 
       res.on('end', () => {
@@ -174,7 +173,7 @@ module.exports = class Session {
     req.end();
 
     process.on('uncaughtException', function(err) {
-      console.error('Error', err.stack);
+      //console.error('Uncaught Error', err.stack);
     });
   }
 
