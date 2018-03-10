@@ -84,3 +84,17 @@ session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
 ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
   `);
 });
+
+
+// load test
+// const interval = setInterval(function() {
+//   session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
+//     console.log(`
+//   ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
+//     `);
+//   });
+// }, 1);
+
+// setTimeout(function() {
+//   clearInterval(interval);
+// }, 1000);

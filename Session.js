@@ -1,8 +1,10 @@
 "use strict";
 
-const request = require("request");
-const Utils = require("./Utils");
-const EARLY_TERMINATION = "EARLY_TERMINATION";
+const http = require('http'); // for testing example app
+const https = require('https');
+const { URL } = require('url');
+const Utils = require('./Utils');
+const EARLY_TERMINATION = 'EARLY_TERMINATION';
 
 const utils = new Utils();
 
@@ -122,22 +124,26 @@ module.exports = class Session {
       if (cb) cb.call(this, new Error(EARLY_TERMINATION))
     }, options.timeout);
 
-    request({
-      method: "POST",
-      url: options.url, 
-      body: body,
-      timeout: options.timeout,
-      json: true
-    }, (err, response, rbody) => {
+    const url = new URL(options.url);
+    const req = https.request(url, (res) => {
       if (completed) return;
       completed = true;
 
       // store into history
       this.history.push(Object.assign({}, body));
       this.updated = Date.now();
-      if (cb) cb.call(this, err, response, rbody);
+
+      if (cb) cb.call(this, res.err, res, res.body);
     });
-    
+
+    req.method = 'POST';
+    req.headers = {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(JSON.stringify(body))
+    };
+    req.timeout = options.timeout;
+    req.write(JSON.stringify(body));
+    req.end();
   }
 
   serialize() {
