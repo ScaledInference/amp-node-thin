@@ -15,7 +15,7 @@ describe("Session", function(){
                 done();
             }
 
-            expect(JSON.parse(response)).to.eql({});
+            expect(response).to.eql({});
             done();
         });
     });

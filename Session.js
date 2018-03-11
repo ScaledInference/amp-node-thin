@@ -3,6 +3,7 @@
 const http = require('http');
 const https = require('https');
 const { URL } = require('url');
+const request = require('request');
 const Utils = require('./Utils');
 const EARLY_TERMINATION = 'EARLY_TERMINATION';
 
@@ -124,56 +125,71 @@ module.exports = class Session {
       if (cb) cb.call(this, new Error(EARLY_TERMINATION))
     }, options.timeout);
 
-    const url = new URL(options.url);
-    const opts = {
-      host: url.host,
-      port: url.port,
-      path: url.path,
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'content-length': Buffer.byteLength(JSON.stringify(body))
-      },
-      timeout: options.timeout
-    };
-    const requestType = url.protocol.indexOf('http:') != -1 ? http : https;
-    try {
-      const req = requestType.request(url, (res) => {
-        res.setEncoding('utf8');
+    // const url = new URL(options.url);
+    // const opts = {
+    //   host: url.host,
+    //   port: url.port,
+    //   path: url.path,
+    //   method: 'POST',
+    //   headers: {
+    //     'content-type': 'application/json',
+    //     'content-length': Buffer.byteLength(JSON.stringify(body))
+    //   },
+    //   timeout: options.timeout
+    // };
+    // const requestType = url.protocol.indexOf('http:') != -1 ? http : https;
+    // try {
+    //   const req = requestType.request(url, (res) => {
+    //     res.setEncoding('utf8');
 
-        if (completed) return;
-        completed = true;
+    //     if (completed) return;
+    //     completed = true;
 
-        let data = '';
-        res.on('data', (chunk) => {
-          data += chunk;
-        });
+    //     let data = '';
+    //     res.on('data', (chunk) => {
+    //       data += chunk;
+    //     });
 
-        res.on('error', (e) => {
-          if (cb) cb.call(this, e);
-        });
+    //     res.on('error', (e) => {
+    //       if (cb) cb.call(this, e);
+    //     });
 
-        res.on('end', () => {
-          // store into history
-          this.history.push(Object.assign({}, body));
-          this.updated = Date.now();
+    //     res.on('end', () => {
+    //       // store into history
+    //       this.history.push(Object.assign({}, body));
+    //       this.updated = Date.now();
 
-          if (cb) cb.call(this, null, res, data);
-        });
-      });
+    //       if (cb) cb.call(this, null, res, data);
+    //     });
+    //   });
 
-      req.on('socket', (socket) => {
-        socket.on('error', (e) => {
-          console.log('Socket error: ', e);
-          if (cb) cb.call(this, e);
-          req.abort();
-        });
-      });
+    //   req.on('socket', (socket) => {
+    //     socket.on('error', (e) => {
+    //       console.log('Socket error: ', e);
+    //       if (cb) cb.call(this, e);
+    //       req.abort();
+    //     });
+    //   });
 
-      req.end();
-    } catch (e) {
-      if (cb) cb.call(this, e);
-    }
+    //   req.end();
+    // } catch (e) {
+    //   if (cb) cb.call(this, e);
+    // }
+    request({
+      method: "POST",
+      url: options.url, 
+      body: body,
+      timeout: options.timeout,
+      json: true
+    }, (err, response, rbody) => {
+      if (completed) return;
+      completed = true;
+
+      // store into history
+      this.history.push(Object.assign({}, body));
+      this.updated = Date.now();
+      if (cb) cb.call(this, err, response, rbody);
+    });
   }
 
   serialize() {

@@ -9,7 +9,9 @@
     "example": "node ./examples/example.js d21dce26ffe3f2c3 http://localhost:8100",
     "test": "find ./tests -name '*.test.js' | xargs nyc --reporter=html --reporter=text mocha "
   },
-  "dependencies": {},
+  "dependencies": {
+    "request": "^2.83.0"
+  },
   "devDependencies": {
     "expect.js": "^0.3.1",
     "mocha": "^3.4.2",
