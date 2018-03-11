@@ -173,7 +173,7 @@ module.exports = class Session {
     req.end();
 
     process.on('uncaughtException', function(err) {
-      //console.error('Uncaught Error', err.stack);
+      console.error('Uncaught Exception', err.stack);
     });
   }
 
