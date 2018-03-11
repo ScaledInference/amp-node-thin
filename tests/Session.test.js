@@ -9,13 +9,13 @@ describe("Session", function(){
     var session = new amp.Session();
 
     it("should make observe call to Amp agent", function(done) {
-        session.observe("ObserveTest", {"tao":"awesome"}, function(error, response) {
+        session.observe("ObserveTest", {tao:"awesome"}, function(error, response) {
             if (error) { 
                 expect().fail();
                 done();
             }
 
-            expect(response).to.eql({});
+            expect(JSON.parse(response)).to.eql({});
             done();
         });
     });

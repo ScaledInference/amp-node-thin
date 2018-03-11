@@ -131,26 +131,26 @@ module.exports = class Session {
       path: url.path,
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(JSON.stringify(body))
+        'content-type': 'application/json',
+        'content-length': Buffer.byteLength(JSON.stringify(body))
       },
       timeout: options.timeout
     };
     const requestType = url.protocol.indexOf('http:') != -1 ? http : https;
     try {
       const req = requestType.request(url, (res) => {
+        res.setEncoding('utf8');
+
         if (completed) return;
         completed = true;
 
         let data = '';
-        res.setEncoding('utf8');
-        
         res.on('data', (chunk) => {
           data += chunk;
         });
 
         res.on('error', (e) => {
-          if (cb) cb.call(this, e, data, res);
+          if (cb) cb.call(this, e);
         });
 
         res.on('end', () => {
@@ -158,7 +158,7 @@ module.exports = class Session {
           this.history.push(Object.assign({}, body));
           this.updated = Date.now();
 
-          if (cb) cb.call(this, null, data, res);
+          if (cb) cb.call(this, null, res, data);
         });
       });
 
@@ -170,10 +170,9 @@ module.exports = class Session {
         });
       });
 
-      req.write(JSON.stringify(body));
       req.end();
     } catch (e) {
-      console.log("Error processing request", e);
+      if (cb) cb.call(this, e);
     }
   }
 
