@@ -18,8 +18,8 @@ module.exports = class Session {
     this.userId = options.userId || utils.randomString(5);
     this.timeout = options.timeout || 1000;
     this.ttl = options.ttl;
-    this.created = this.updated = Date.now();
     this.index = 1;
+    this.created = this.updated = Date.now();
   }
 
   observe(name, props = {}, options = {}, cb) {

@@ -1,12 +1,12 @@
 {
   "name": "amp-node-thin",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "Amp.js",
   "repository": "git@github.com:ScaledInference/amp-node-thin.git",
   "author": "Tao <tao@scaledinference.com>",
   "license": "MIT",
   "scripts": {
-    "example": "node ./examples/example.js ac646ba1c1398b12 http://localhost:8100",
+    "example": "node ./examples/example.js d21dce26ffe3f2c3 http://localhost:8100",
     "test": "find ./tests -name '*.test.js' | xargs nyc --reporter=html --reporter=text mocha "
   },
   "dependencies": {},
