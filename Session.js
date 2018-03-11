@@ -137,44 +137,44 @@ module.exports = class Session {
       timeout: options.timeout
     };
     const requestType = url.protocol.indexOf('http:') != -1 ? http : https;
-    const req = requestType.request(url, (res) => {
-      if (completed) return;
-      completed = true;
+    try {
+      const req = requestType.request(url, (res) => {
+        if (completed) return;
+        completed = true;
 
-      let data = '';
-      res.setEncoding('utf8');
-      
-      res.on('data', (chunk) => {
-        data += chunk;
+        let data = '';
+        res.setEncoding('utf8');
+        
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
+
+        res.on('error', (e) => {
+          if (cb) cb.call(this, e, data, res);
+        });
+
+        res.on('end', () => {
+          // store into history
+          this.history.push(Object.assign({}, body));
+          this.updated = Date.now();
+
+          if (cb) cb.call(this, null, data, res);
+        });
       });
 
-      res.on('error', (e) => {
-        if (cb) cb.call(this, e, data, res);
+      req.on('socket', (socket) => {
+        socket.on('error', (e) => {
+          console.log('Socket error: ', e);
+          if (cb) cb.call(this, e);
+          req.abort();
+        });
       });
 
-      res.on('end', () => {
-        // store into history
-        this.history.push(Object.assign({}, body));
-        this.updated = Date.now();
-
-        if (cb) cb.call(this, null, data, res);
-      });
-    });
-
-    req.on('socket', (socket) => {
-      socket.on('error', (e) => {
-        console.log('Socket error: ', e);
-        if (cb) cb.call(this, e);
-        req.abort();
-      });
-    });
-
-    req.write(JSON.stringify(body));
-    req.end();
-
-    process.on('uncaughtException', function(err) {
-      console.error('Uncaught Exception', err.stack);
-    });
+      req.write(JSON.stringify(body));
+      req.end();
+    } catch (e) {
+      console.log("Error processing request", e);
+    }
   }
 
   serialize() {
