@@ -1,6 +1,6 @@
 "use strict";
 
-const http = require('http'); // for testing example app
+const http = require('http');
 const https = require('https');
 const { URL } = require('url');
 const Utils = require('./Utils');
