@@ -9,7 +9,7 @@ describe("Session", function(){
     var session = new amp.Session();
 
     it("should make observe call to Amp agent", function(done) {
-        session.observe("ObserveTest", {"tao":"awesome"}, function(error, response) {
+        session.observe("ObserveTest", {"tao":"awesome"}, function(error, body, response) {
             if (error) { 
                 expect().fail();
                 done();

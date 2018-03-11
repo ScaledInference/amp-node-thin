@@ -141,7 +141,7 @@ module.exports = class Session {
       if (completed) return;
       completed = true;
 
-      var data = '';
+      let data = '';
       res.setEncoding = 'utf8';
       
       res.on('data', (chunk) => {
@@ -149,7 +149,7 @@ module.exports = class Session {
       });
 
       res.on('error', (e) => {
-        if (cb) cb.call(this, e, res, data);
+        if (cb) cb.call(this, e, data, res);
       });
 
       res.on('end', () => {
@@ -157,7 +157,7 @@ module.exports = class Session {
         this.history.push(Object.assign({}, body));
         this.updated = Date.now();
 
-        if (cb) cb.call(this, null, res, data);
+        if (cb) cb.call(this, null, data, res);
       });
     });
 
