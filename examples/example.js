@@ -98,7 +98,7 @@ const interval = setInterval(function() {
   ClickBtn Observe request sent! Count: ${++count} Error Count: ${errCount} ${err ? "Error: " + err : " "}
     `);
   });
-}, 0);
+}, 10);
 
 setTimeout(function() {
   clearInterval(interval);
