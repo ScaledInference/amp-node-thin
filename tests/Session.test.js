@@ -9,7 +9,7 @@ describe("Session", function(){
     var session = new amp.Session();
 
     it("should make observe call to Amp agent", function(done) {
-        session.observe("ObserveTest", {"tao":"awesome"}, {}, function(error, response) {
+        session.observe("ObserveTest", {tao:"awesome"}, function(error, response) {
             if (error) { 
                 expect().fail();
                 done();
@@ -120,5 +120,11 @@ describe("Session", function(){
         });
 
         expect(decision).to.eql({first: "a", second: "d"});
+    });
+
+    it("should allow setting userId", function() {
+        amp.session = new amp.Session({userId: 'Yanpu'});
+
+        expect(amp.session.userId).to.equal('Yanpu');
     });
 });

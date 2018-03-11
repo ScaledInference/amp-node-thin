@@ -95,10 +95,10 @@ const interval = setInterval(function() {
       ++errCount;
     }
     console.log(`
-  ClickBtn Observe request sent! Count: ${++count} Error Count: ${errCount} ? "Error: " + err : " "}
+  ClickBtn Observe request sent! Count: ${++count} Error Count: ${errCount} ${err ? "Error: " + err : " "}
     `);
   });
-}, 0);
+}, 10);
 
 setTimeout(function() {
   clearInterval(interval);

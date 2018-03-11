@@ -1,8 +1,8 @@
 "use strict";
 
-const request = require("request");
-const Utils = require("./Utils");
-const EARLY_TERMINATION = "EARLY_TERMINATION";
+const request = require('request');
+const Utils = require('./Utils');
+const EARLY_TERMINATION = 'EARLY_TERMINATION';
 
 const utils = new Utils();
 
@@ -126,9 +126,6 @@ module.exports = class Session {
       method: "POST",
       url: options.url, 
       body: body,
-      headers: {
-        'Content-Length': Buffer.byteLength(JSON.stringify(body))
-      },
       timeout: options.timeout,
       json: true
     }, (err, response, rbody) => {
@@ -140,7 +137,6 @@ module.exports = class Session {
       this.updated = Date.now();
       if (cb) cb.call(this, err, response, rbody);
     });
-    
   }
 
   serialize() {
