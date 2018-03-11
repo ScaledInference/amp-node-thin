@@ -142,7 +142,7 @@ module.exports = class Session {
       completed = true;
 
       let data = '';
-      res.setEncoding = 'utf8';
+      res.setEncoding('utf8');
       
       res.on('data', (chunk) => {
         data += chunk;
