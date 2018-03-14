@@ -53,7 +53,7 @@ After importing amp-node-thin, the Amp constructor can be used to create an Amp 
 
 ### Importing and Intializing Amp
 ``` javascript
-const Amp = require("amp-node-thin");
+const Amp = require("amp-node");
 ...
 const amp = new Amp({key: "YOUR_PROJECT_KEY", domain: "AMP_AGENT_URL"});
 ```
