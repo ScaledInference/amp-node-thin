@@ -4,11 +4,58 @@
 The amp-node-thin library has an Amp class. It can be used to construct an Amp instance used to represent a single Amp project and needs to be initialized with a project key and the domain, which is the URL of the Amp Agent. 
 
 The Amp instance can then be used to create session objects which have two main methods: observe and decide.
+## Installing Amp Agent
+Before we can get started using the Node client, you need to install Amp Agent on one of your servers. Amp Agent serves as a surrogate between the application and Amp. It is a docker container that can be deployed close to the application's infrastructure, such that the application can make requests at a high frequency with low round-trip latency. This is different than the JS, iOS and Android clients as they are fat clients that evaluate policies locally and can be loaded asynchronously, whereas the NodeJS and Python clients are thin clients which use the Amp Agent to evaluate policies.
 
+### Prerequisites
+* A Linux machine or VM provisioned with a minimum of 4GB RAM
+* Docker
+  * Verify installation
+    * `$ sudo docker -v`
+  * If Docker is not installed, setup using:
+    * [Ubuntu](https://docs.docker.com/engine/installation/linux/ubuntu/)
+    * [CentOS / Redhat](https://docs.docker.com/engine/installation/linux/centos/)
+    * [macOS](https://docs.docker.com/docker-for-mac/install/)
+
+The following versions is required for the Node Amp Client library:
+>Node: >= 4.4
+
+### Install Amp-Node Client
+* Download the [Amp-Node Client](https://cdn.amp.ai/clients/amp-node-thin.zip) library.
+ * Unzip the repository to a convenient location and install the npm dependencies:
+    ``` bash
+    $ cd amp-node-thin
+    $ npm install
+    ```
+
+### Setup Amp Agent
+``` bash
+$ sudo docker pull scaledinference/ampagent:prod-latest
+
+$ sudo docker run -d -t -i -e AMPAGENT_KEY="<PROJECT_KEY>" -p 8100:8100 --memory="2.5g" --memory-swap="2.5g" --sysctl net.core.somaxconn=1024 --name ampagent scaledinference/ampagent:prod-latest
+
+$ sudo docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock v2tec/watchtower ampagent
+```
+
+### Verify Setup
+* Verify the container is running:
+  ``` bash
+  $ sudo docker ps -a
+  ```
+* A health check for Amp Agent can be setup at port 8100 using:
+  ``` bash
+  $ curl http://<amp-agent-hostname:8100>/healthz
+  ```
+* Verify the Amp Client library can connect to Amp Agent at port 8100 from another machine.
+  ``` bash
+  $ node ./examples/example.js <project key> http://<amp-agent-hostname:8100>
+  ```
+  
 ## Amp()
 After importing amp-node-thin, the Amp constructor can be used to create an Amp instance. It requires two parameters: a project key and the Amp-agent URL (with port 8100).
 
-```
+### Importing and Intializing Amp
+``` javascript
 const Amp = require("amp-node-thin");
 ...
 const amp = new Amp({key: "YOUR_PROJECT_KEY", domain: "AMP_AGENT_URL"});
@@ -16,7 +63,8 @@ const amp = new Amp({key: "YOUR_PROJECT_KEY", domain: "AMP_AGENT_URL"});
 
 ## amp.Session()
 The session constructor is used to create a session (object):
-```
+### Initializing the Session
+``` javascript
 const session = new amp.Session();
 ```
 Session objects created by an Amp instance support two methods: `observe` and `decide`.
@@ -25,7 +73,7 @@ Session objects created by an Amp instance support two methods: `observe` and `d
 
 The observe method is used to send observations.
 
-```
+``` javascript
 /**
  * observe, send observation with event name and properties related to 
  * observation 
@@ -54,7 +102,7 @@ void observe(name, properties, options, callback(err))
 ### session.Decide()
 The decide method is used to make decisions. 
 
-```
+``` javascript
 /**
  * decide, request a decision / several decisions using a named event and 
  * a list of candidates
@@ -87,15 +135,17 @@ void decide(name, candidates, options, callback(err, decision))
 ## Troubleshooting (FAQ)
 
 ### Network connectivity issues
-Persistent HTTP transport related errors on the amp-client can occur when the amp object is initialized with an Amp-agent URL that is not reachable on the same network or an incorrect port is used to connect to Amp-agent.
+>Persistent HTTP transport related errors on the amp-client can occur when the amp object is initialized with an Amp-agent URL that is not reachable on the same network or an incorrect port is used to connect to Amp-agent.
 
 ### Amp-agent is not responsive
-If the health check at port 8100 fails consistently and Amp-agent is not responsive, the container can be restarted (sudo docker restart <containerId>). The amp-client libraries will fallback to default decisions till the Amp-agent restarts.
+>If the health check at port 8100 fails consistently and Amp-agent is not responsive, the container can be restarted (sudo docker restart <containerId>). The amp-client libraries will fallback to default decisions till the Amp-agent restarts.
 
 ### Amp-agent shutting down
-If Amp-agent is shutting down due to quota limits, please email us at support@scaledinference.com to increase the quota limit for Amp-agents for your customer key. For all other cases, it is indicative of a persistent network connectivity issue with amp.ai, where the Amp-agent is running out of memory due to a cache of unsent requests.
+>If Amp-agent is shutting down due to quota limits, please email us at support@scaledinference.com to increase the quota limit for Amp-agents for your customer key. For all other cases, it is indicative of a persistent network connectivity issue with amp.ai, where the Amp-agent is running out of memory due to a cache of unsent requests.
 
 ## Example Usage
+
+>`node ./examples/example.js <project_key> http://localhost:8100`
 
 ``` javascript
 console.log(`
@@ -144,7 +194,7 @@ session.decide("Template", [
   // decision.color
   // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision[0])}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
 
@@ -157,7 +207,7 @@ session.decide("TemplateCombo", {
   // decision.color
   // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision[0])}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
 
@@ -172,7 +222,7 @@ session.decide("TemplateCombo", {
   // decision.color
   // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision[0])} and ${JSON.stringify(decision[1])}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
 
