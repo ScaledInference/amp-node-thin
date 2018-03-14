@@ -1,11 +1,7 @@
 # Amp-Node Client
 
-## Overview
-The amp-node-thin library has an Amp class. It can be used to construct an Amp instance used to represent a single Amp project and needs to be initialized with a project key and the domain, which is the URL of the Amp Agent. 
-
-The Amp instance can then be used to create session objects which have two main methods: observe and decide.
 ## Installing Amp Agent
-Before we can get started using the Node client, you need to install Amp Agent on one of your servers. Amp Agent serves as a surrogate between the application and Amp. It is a docker container that can be deployed close to the application's infrastructure, such that the application can make requests at a high frequency with low round-trip latency. This is different than the JS, iOS and Android clients as they are fat clients that evaluate policies locally and can be loaded asynchronously, whereas the NodeJS and Python clients are thin clients which use the Amp Agent to evaluate policies.
+Before we can get started using the Amp-Node Client, you need to install Amp Agent on one of your servers. Amp Agent serves as a surrogate between the application and Amp. It is a docker container that can be deployed close to the application's infrastructure, such that the application can make requests at a high frequency with low round-trip latency. This is different than the JS, iOS and Android clients as they are fat clients that evaluate policies locally and can be loaded asynchronously, whereas the NodeJS and Python clients are thin clients which use the Amp Agent to evaluate policies.
 
 ### Prerequisites
 * A Linux machine or VM provisioned with a minimum of 4GB RAM
@@ -50,7 +46,11 @@ $ sudo docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.s
   ``` bash
   $ node ./examples/example.js <project key> http://<amp-agent-hostname:8100>
   ```
-  
+
+## Amp-Node Client Overview
+The Amp-Node Client library has an Amp class. It can be used to construct an Amp instance used to represent a single Amp project and needs to be initialized with a project key and the domain, which is the URL of the Amp Agent. 
+
+The Amp instance can then be used to create session objects which have two main methods: observe and decide.
 ## Amp()
 After importing amp-node-thin, the Amp constructor can be used to create an Amp instance. It requires two parameters: a project key and the Amp-agent URL (with port 8100).
 
