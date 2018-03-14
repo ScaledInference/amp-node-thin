@@ -17,12 +17,9 @@ The following versions is required for the Node Amp Client library:
 >Node: >= 4.4
 
 ### Install Amp-Node Client
-* Download the [Amp-Node Client](https://cdn.amp.ai/clients/amp-node-thin.zip) library.
- * Unzip the repository to a convenient location and install the npm dependencies:
-    ``` bash
-    $ cd amp-node-thin
-    $ npm install
-    ```
+  ``` bash
+  $ npm install amp-node-thin
+  ```
 
 ### Setup Amp Agent
 ``` bash
