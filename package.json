@@ -10,7 +10,7 @@
     "test": "find ./tests -name '*.test.js' | xargs nyc --reporter=html --reporter=text mocha "
   },
   "dependencies": {
-    "request": "^2.81.0"
+    "request": "^2.83.0"
   },
   "devDependencies": {
     "expect.js": "^0.3.1",

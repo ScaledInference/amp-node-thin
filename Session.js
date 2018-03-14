@@ -1,11 +1,25 @@
 "use strict";
 
-const request = require("request");
-const Utils = require("./Utils");
-const EARLY_TERMINATION = "EARLY_TERMINATION";
+const request = require('request');
+const Utils = require('./Utils');
+const EARLY_TERMINATION = 'EARLY_TERMINATION';
 
 const utils = new Utils();
 
+/**
+ * Session
+ * Constructs the session object for the Amp instance.
+ * 
+ * @constructor
+ * @param {Object} options
+ * 
+ * Options:
+ *  id - id of the session (useful for session continuation)
+ *  history - history of events in session
+ *  userId - id of user
+ *  timeout - TTL of requests
+ *  ttl - TTL for session before a new one is created
+ */
 module.exports = class Session {
   constructor(options) {
     this.amp = options.amp;
@@ -20,6 +34,15 @@ module.exports = class Session {
     this.created = this.updated = Date.now();
   }
 
+  /**
+   * observe
+   * Observes user context prior to decision and outcomes after the decision.
+   * 
+   * @param  {string}   name - name of event
+   * @param  {Object}   props (optional) - properties to observe
+   * @param  {Object}   options (optional) - timeout
+   * @param  {Function} cb (optional)
+   */
   observe(name, props = {}, options = {}, cb) {
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/observe";
@@ -28,7 +51,6 @@ module.exports = class Session {
     if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
 
     this.request({
-      // if need more, add more here
       name: name,
       sessionId: this.id,
       userId: this.userId,
@@ -36,7 +58,6 @@ module.exports = class Session {
       index: this.index++,
       key: this.amp.key
     }, options, (err, response, body) => {
-      // callback with err and response body
       if (err && err.message === EARLY_TERMINATION) {
         if (cb) cb(null, body);
       } else {
@@ -45,6 +66,15 @@ module.exports = class Session {
     });
   }
 
+  /**
+   * decide
+   * Decision to determine action to take.
+   * 
+   * @param  {string} name - name of event
+   * @param  {array} candidates - variations to choose from
+   * @param  {Object} options (optional) - timeout and ttl
+   * @param  {Function} cb - error and decision
+   */
   decide(name, candidates = [], options = {}, cb) {
     options.limit = 1;
     options.timeout = options.timeout || this.timeout;
@@ -63,7 +93,6 @@ module.exports = class Session {
     }
 
     this.request({
-      // if need more, add more here
       name: name,
       key: this.amp.key,
       sessionId: this.id,
@@ -74,9 +103,6 @@ module.exports = class Session {
       },
       index: this.index++
     }, options, (err, response, body) => {
-      // body:
-      //   {indexes: [], ...etc}
-      // callback with err and decision, response body
       let defaultDecision = allCandidates[0];
       if (err && err.message === EARLY_TERMINATION) {
         // use default
@@ -94,6 +120,12 @@ module.exports = class Session {
     return allCandidates[0];
   }
 
+  /**
+   * _formatCandidates
+   * Formats the candidates to be in correct format for policy execution
+   * 
+   * @param  {array|object} candidates
+   */
   _formatCandidates(candidates) {
     let res = { allCandidates: [], requestSafeCandidates: [] };
     if (!candidates) return res;
@@ -109,6 +141,14 @@ module.exports = class Session {
     return res;
   }
 
+  /**
+   * request
+   * Wrapper for sending API requests and managing timeouts and errors
+   * 
+   * @param  {Object} body - request body
+   * @param  {Object} options - options passed from observe or decide
+   * @param  {Function} cb - callback
+   */
   request(body, options, cb) {
     // make sure it will be called after timeout
     let completed;
@@ -126,9 +166,6 @@ module.exports = class Session {
       method: "POST",
       url: options.url, 
       body: body,
-      headers: {
-        'Content-Length': Buffer.byteLength(JSON.stringify(body))
-      },
       timeout: options.timeout,
       json: true
     }, (err, response, rbody) => {
@@ -140,9 +177,12 @@ module.exports = class Session {
       this.updated = Date.now();
       if (cb) cb.call(this, err, response, rbody);
     });
-    
   }
 
+  /**
+   * serialize
+   * Serializes the session to be persisted to another domain or platform
+   */
   serialize() {
     return JSON.stringify({
       index: this.index,
