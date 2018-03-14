@@ -5,6 +5,21 @@ const Utils = require("./Utils");
 
 const utils = new Utils();
 
+/**
+ * Amp
+ * Constructs Amp instance with passed configuration.
+ * 
+ * @constructor
+ * @param {Object} options
+ * 
+ * Options: 
+ *  key - project key
+ *  domain - domain of Amp server
+ *  apiPath - path of API
+ *  sessionTTL - TTL for session
+ *  timeout - TTL for requests
+ *
+ */
 module.exports = class Amp {
   constructor(options = {}) {
     this.key = options.key;
