@@ -11,7 +11,9 @@ class Utils {
   }
 
   /*
-   * isFunction, check whether target is a function or not.
+   * isFunction
+   * Check whether target is a function or not.
+   * 
    * @param {*} o 
    * @returns {Boolean}
    */
@@ -20,7 +22,8 @@ class Utils {
   }
 
   /**
-   * isPrimitive, check whether target is a primitive or not, true for `string`, `number`, `boolean`.
+   * isPrimitive
+   * Check whether target is a primitive or not, true for `string`, `number`, `boolean`.
    * 
    * TODO: should contain `symbol` or not?
    * 
@@ -32,7 +35,8 @@ class Utils {
   }
 
   /**
-   * isString, check whether target is a string or not.
+   * isString
+   * Check whether target is a string or not.
    * 
    * @param {*} o 
    * @returns {Boolean}
@@ -42,7 +46,8 @@ class Utils {
   }
 
   /**
-   * isNumber, check whether target is a number or not.
+   * isNumber
+   * Check whether target is a number or not.
    * 
    * @param {*} o
    * @returns {Boolean}
@@ -52,7 +57,8 @@ class Utils {
   }
 
   /**
-   * isBoolean, check whether target is a boolean or not.
+   * isBoolean
+   * Check whether target is a boolean or not.
    * 
    * @param {*} o
    * @returns {Boolean}
@@ -62,7 +68,8 @@ class Utils {
   }
 
   /**
-   * isEmpty, check whether target is either undefined or null.
+   * isEmpty
+   * Check whether target is either undefined or null.
    * 
    * @param {*} o 
    * @returns {Boolean}
@@ -72,7 +79,8 @@ class Utils {
   }
 
   /**
-   * isArray, check whether target is truly an array.
+   * isArray
+   * Check whether target is truly an array.
    * 
    * @param {*} o 
    * @returns {Boolean}
@@ -82,7 +90,8 @@ class Utils {
   }
 
   /**
-   * isObject, check whether target is truly an object.
+   * isObject
+   * Check whether target is truly an object.
    * 
    * @param {*} o 
    * @returns {Boolean}
@@ -92,7 +101,8 @@ class Utils {
   }
 
   /**
-   * isJSONSafe, check whether target can be used with `JSON.stringify` or not.
+   * isJSONSafe
+   * Check whether target can be used with `JSON.stringify` or not.
    * 
    * @param {*} o 
    * @returns {Boolean}
@@ -107,7 +117,9 @@ class Utils {
   }
 
   /**
-   * hashCode, generate hash code from a string.
+   * hashCode
+   * Generate hash code from a string.
+   * 
    * @param {Stirng} str 
    * @returns {String}
    */
@@ -120,7 +132,9 @@ class Utils {
   }
 
   /**
-   * randomString, generate random string from an charset, length can be specified.
+   * randomString
+   * Generate random string from an charset, length can be specified.
+   * 
    * @param {Number} length 
    * @param {String} charset 
    * @returns {String}
@@ -207,6 +221,7 @@ class Utils {
   }
 
   /**
+   * merge
    * 
    * @param {Boolean} [deep] - deep merge mode
    * @param {Object} target - target object of the merging
@@ -279,7 +294,9 @@ class Utils {
   }
 
   /**
-   * deepMerge, a short cut of `merge` with recursively enabled by default.
+   * deepMerge
+   * A short cut of `merge` with recursively enabled by default.
+   * 
    * @returns {Object}
    */
   deepMerge() {
@@ -287,8 +304,10 @@ class Utils {
     return this.merge.bind(this, true).apply(this, arguments);
   }
 
-    /**
+  /**
    *
+   * result
+   * 
    * @param {*} o - can be any thing, if function, will resolve before going to next step
    * @param {String} [ensureType] - expected type
    * @param {Object} [context] - context used if o is function

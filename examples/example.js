@@ -39,12 +39,12 @@ session.decide("Template", [
   {color: "green", font: "italic"},
   {color: "red", font: "italic"},
   {color: "green", font: "bold"}
-], function(err, decisions) {
+], function(err, decision) {
   // now use the decision
-  // decisions.color
-  // decisions.font
+  // decision.color
+  // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions)}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
 
@@ -52,12 +52,12 @@ Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stri
 session.decide("TemplateCombo", {
   color: ["red", "green"],
   font: ["bold", "italic"]
-}, function(err, decisions) {
+}, function(err, decision) {
   // now use the decision
   // decision.color
   // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions)}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
 
@@ -67,12 +67,12 @@ session.decide("TemplateCombo", {
   font: ["bold", "italic"]
 }, {
   limit: 2
-}, function(err, decisions) {
+}, function(err, decision) {
   // now use the decision
-  // decisions.color
-  // decisions.font
+  // decision.color
+  // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions)}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
 
@@ -84,39 +84,3 @@ session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
 ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
   `);
 });
-
-// load test
-let count = 0;
-let errCount = 0;
-
-const interval = setInterval(function() {
-  session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
-    if (err) {
-      ++errCount;
-    }
-    console.log(`
-  ClickBtn Observe request sent! Count: ${++count} Error Count: ${errCount} ${err ? "Error: " + err : " "}
-    `);
-  });
-}, 10);
-
-setTimeout(function() {
-  clearInterval(interval);
-}, 10000);
-
-
-// let count = 0;
-// let errCount = 0;
-// for (let i = 0; i < 1000; i++) {
-//   setTimeout(() => {
-//     session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
-//       if (err) { 
-//         errCount++;
-//       }
-
-//       console.log(`
-//     ClickBtn Observe request sent!  sent: ${++count} errors: ${errCount} ${err ? "Error: " + err : " "}
-//       `);
-//     });
-//   }, i);
-// }
