@@ -1,6 +1,101 @@
-# amp-node-thin
+# Amp-Node Client
 
-## Usage
+## Overview
+The amp-node-thin library has an Amp class. It can be used to construct an Amp instance used to represent a single Amp project and needs to be initialized with a project key and the domain, which is the URL of the Amp Agent. 
+
+The Amp instance can then be used to create session objects which have two main methods: observe and decide.
+
+## Amp()
+After importing amp-node-thin, the Amp constructor can be used to create an Amp instance. It requires two parameters: a project key and the Amp-agent URL (with port 8100).
+
+```
+const Amp = require("amp-node-thin");
+...
+const amp = new Amp({key: "YOUR_PROJECT_KEY", domain: "AMP_AGENT_URL"});
+```
+
+## amp.Session()
+The session constructor is used to create a session (object):
+```
+const session = new amp.Session();
+```
+Session objects created by an Amp instance support two methods: `observe` and `decide`.
+
+## session.Observe()
+
+The observe method is used to send observations.
+
+```
+/**
+ * observe, send observation with event name and properties related to 
+ * observation 
+ *
+ * @name     observe
+ * @memberOf session
+ * @param    {String} name - required
+ * @param    {Object} properties - optional
+ * @param    {Object} options - optional
+ * @param    {Number} options.timeout - time allowed to make request
+ * @callback callback - optional
+ * @param    {Error} err
+ *
+ * @example
+ * session.observe(“userInfo”, {country: “china”, lang: “zh”}, 
+ *   {timeout: 500}, function(err) {
+ *     if(err) {
+ *       console.log(err);
+ *     }
+ *  });
+ * 
+ */
+void observe(name, properties, options, callback(err))
+```
+
+### session.Decide()
+The decide method is used to make decisions. 
+
+```
+/**
+ * decide, request a decision / several decisions using a named event and 
+ * a list of candidates
+ *
+ * @name decide
+ * @memberOf session
+ * @param {String} name - required
+ * @param {Object|Array} candidates - required
+ * @param {Object} options - optional
+ * @param {Number} options.timeout - the time in milliseconds that the
+ *        request has to complete
+ * @callback callback - optional
+ * @param {Error} err
+ * @param {Array} decisions
+ *
+ * @example
+ * session.decide(“textStyle”, [
+ *   {color: “red”, font: “bold”},
+ *   {color: “green”, font: “italic”}, 
+ *   {color: “blue”, font: “regular”},
+ * ], function(err, decision) {
+ *      // decision: the best candidate (from array of candidates)
+ *      // use decision.color & decision.font to render to page
+ * });
+ * 
+ */
+void decide(name, candidates, options, callback(err, decision))
+```
+
+## Troubleshooting (FAQ)
+
+### Network connectivity issues
+Persistent HTTP transport related errors on the amp-client can occur when the amp object is initialized with an Amp-agent URL that is not reachable on the same network or an incorrect port is used to connect to Amp-agent.
+
+### Amp-agent is not responsive
+If the health check at port 8100 fails consistently and Amp-agent is not responsive, the container can be restarted (sudo docker restart <containerId>). The amp-client libraries will fallback to default decisions till the Amp-agent restarts.
+
+### Amp-agent shutting down
+If Amp-agent is shutting down due to quota limits, please email us at support@scaledinference.com to increase the quota limit for Amp-agents for your customer key. For all other cases, it is indicative of a persistent network connectivity issue with amp.ai, where the Amp-agent is running out of memory due to a cache of unsent requests.
+
+## Example Usage
 
 ``` javascript
 console.log(`
@@ -44,12 +139,12 @@ session.decide("Template", [
   {color: "green", font: "italic"},
   {color: "red", font: "italic"},
   {color: "green", font: "bold"}
-], function(err, decisions) {
+], function(err, decision) {
   // now use the decision
-  // decisions.color
-  // decisions.font
+  // decision.color
+  // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions[0])}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision[0])}
   `);
 });
 
@@ -57,12 +152,12 @@ Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stri
 session.decide("TemplateCombo", {
   color: ["red", "green"],
   font: ["bold", "italic"]
-}, function(err, decisions) {
+}, function(err, decision) {
   // now use the decision
   // decision.color
   // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions[0])}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision[0])}
   `);
 });
 
@@ -72,12 +167,12 @@ session.decide("TemplateCombo", {
   font: ["bold", "italic"]
 }, {
   limit: 2
-}, function(err, decisions) {
+}, function(err, decision) {
   // now use the decision
-  // decisions.color
-  // decisions.font
+  // decision.color
+  // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions[0])} and ${JSON.stringify(decisions[1])}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision[0])} and ${JSON.stringify(decision[1])}
   `);
 });
 
