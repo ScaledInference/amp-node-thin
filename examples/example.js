@@ -39,12 +39,12 @@ session.decide("Template", [
   {color: "green", font: "italic"},
   {color: "red", font: "italic"},
   {color: "green", font: "bold"}
-], function(err, decisions) {
+], function(err, decision) {
   // now use the decision
-  // decisions.color
-  // decisions.font
+  // decision.color
+  // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions)}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
 
@@ -52,12 +52,12 @@ Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stri
 session.decide("TemplateCombo", {
   color: ["red", "green"],
   font: ["bold", "italic"]
-}, function(err, decisions) {
+}, function(err, decision) {
   // now use the decision
   // decision.color
   // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions)}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
 
@@ -67,12 +67,12 @@ session.decide("TemplateCombo", {
   font: ["bold", "italic"]
 }, {
   limit: 2
-}, function(err, decisions) {
+}, function(err, decision) {
   // now use the decision
-  // decisions.color
-  // decisions.font
+  // decision.color
+  // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decisions)}
+Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
 
