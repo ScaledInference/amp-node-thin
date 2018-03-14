@@ -16,7 +16,7 @@ Before we can get started using the Amp-Node Client, you need to install Amp Age
 The following versions is required for the Node Amp Client library:
 >Node: >= 4.4
 
-### Install Amp-Node Client
+### Install Amp-Node Client in your Application
   ``` bash
   $ npm install --save amp-node
   ```
@@ -49,7 +49,7 @@ The Amp-Node Client library has an Amp class. It can be used to construct an Amp
 
 The Amp instance can then be used to create session objects which have two main methods: observe and decide.
 ## Amp()
-After importing amp-node-thin, the Amp constructor can be used to create an Amp instance. It requires two parameters: a project key and the Amp-agent URL (with port 8100).
+After importing amp-node, the Amp constructor can be used to create an Amp instance. It requires two parameters: a project key and the Amp-agent URL (with port 8100).
 
 ### Importing and Intializing Amp
 ``` javascript
