@@ -18,7 +18,7 @@ The following versions is required for the Node Amp Client library:
 
 ### Install Amp-Node Client
   ``` bash
-  $ npm install --save amp-node-thin
+  $ npm install --save amp-node
   ```
 
 ### Setup Amp Agent
