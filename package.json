@@ -1,5 +1,5 @@
 {
-  "name": "amp-node-thin",
+  "name": "amp-node",
   "version": "1.0.7",
   "main": "Amp.js",
   "repository": "git@github.com:ScaledInference/amp-node-thin.git",
