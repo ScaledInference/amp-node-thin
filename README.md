@@ -129,17 +129,6 @@ The decide method is used to make decisions.
 void decide(name, candidates, options, callback(err, decision))
 ```
 
-## Troubleshooting (FAQ)
-
-### Network connectivity issues
->Persistent HTTP transport related errors on the amp-client can occur when the amp object is initialized with an Amp-agent URL that is not reachable on the same network or an incorrect port is used to connect to Amp-agent.
-
-### Amp-agent is not responsive
->If the health check at port 8100 fails consistently and Amp-agent is not responsive, the container can be restarted (sudo docker restart <containerId>). The amp-client libraries will fallback to default decisions till the Amp-agent restarts.
-
-### Amp-agent shutting down
->If Amp-agent is shutting down due to quota limits, please email us at support@scaledinference.com to increase the quota limit for Amp-agents for your customer key. For all other cases, it is indicative of a persistent network connectivity issue with amp.ai, where the Amp-agent is running out of memory due to a cache of unsent requests.
-
 ## Example Usage
 
 >`node ./examples/example.js <project_key> http://localhost:8100`
