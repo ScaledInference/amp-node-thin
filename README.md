@@ -1,52 +1,14 @@
 # Amp-Node Client
 
-## Installing Amp Agent
-Before we can get started using the Amp-Node Client, you need to install Amp Agent on one of your servers. Amp Agent serves as a surrogate between the application and Amp. It is a docker container that can be deployed close to the application's infrastructure, such that the application can make requests at a high frequency with low round-trip latency. This is different than the JS, iOS and Android clients as they are fat clients that evaluate policies locally and can be loaded asynchronously, whereas the NodeJS and Python clients are thin clients which use the Amp Agent to evaluate policies.
-
-### Prerequisites
-* A Linux machine or VM provisioned with a minimum of 4GB RAM
-* Docker
-  * Verify installation
-    * `$ sudo docker -v`
-  * If Docker is not installed, setup using:
-    * [Ubuntu](https://docs.docker.com/engine/installation/linux/ubuntu/)
-    * [CentOS / Redhat](https://docs.docker.com/engine/installation/linux/centos/)
-    * [macOS](https://docs.docker.com/docker-for-mac/install/)
-
-The following versions is required for the Node Amp Client library:
->Node: >= 4.4
-
-### Install Amp-Node Client in your Application
-  ``` bash
-  $ npm install --save amp-node
-  ```
-
-### Setup Amp Agent
-``` bash
-$ sudo docker pull scaledinference/ampagent:prod-latest
-
-$ sudo docker run -d -t -i -e AMPAGENT_KEY="<PROJECT_KEY>" -p 8100:8100 --memory="2.5g" --memory-swap="2.5g" --sysctl net.core.somaxconn=1024 --name ampagent scaledinference/ampagent:prod-latest
-
-$ sudo docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock v2tec/watchtower ampagent
-```
-
-### Verify Setup
-* Verify the container is running:
-  ``` bash
-  $ sudo docker ps -a
-  ```
-* A health check for Amp Agent can be setup at port 8100 using:
-  ``` bash
-  $ curl http://<amp-agent-hostname:8100>/healthz
-  ```
-* Verify the Amp Client library can connect to Amp Agent at port 8100 from another machine.
-  ``` bash
-  $ node ./examples/example.js <project key> http://<amp-agent-hostname:8100>
-  ```
-
 ## Amp-Node Client Overview
 The Amp-Node Client library has an Amp class. It can be used to construct an Amp instance used to represent a single Amp project and needs to be initialized with a project key and the domain, which is the URL of the Amp Agent. 
 
+>_**Note: Contact support@scaledinference.com for more information on integrating with our Amp-Agent.  Amp-Agent is required to run the Amp-Node client.**_
+
+## Installing Amp-Node Client
+``` javascript
+npm i --save amp-node
+```
 The Amp instance can then be used to create session objects which have two main methods: observe and decide.
 ## Amp()
 After importing amp-node, the Amp constructor can be used to create an Amp instance. It requires two parameters: a project key and the Amp-agent URL (with port 8100).
