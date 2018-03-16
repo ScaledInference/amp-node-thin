@@ -9,10 +9,10 @@ const utils = new Utils();
 /**
  * Session
  * Constructs the session object for the Amp instance.
- * 
+ *
  * @constructor
  * @param {Object} options
- * 
+ *
  * Options:
  *  id - id of the session (useful for session continuation)
  *  history - history of events in session
@@ -22,6 +22,7 @@ const utils = new Utils();
  */
 module.exports = class Session {
   constructor(options) {
+    // note: if you modify this constructor, please look at _startFreshIfExpired: it might also need modification.
     this.amp = options.amp;
     if (!this.amp) throw new Error("Not the right way to create a session!");
 
@@ -37,13 +38,14 @@ module.exports = class Session {
   /**
    * observe
    * Observes user context prior to decision and outcomes after the decision.
-   * 
+   *
    * @param  {string}   name - name of event
    * @param  {Object}   props (optional) - properties to observe
    * @param  {Object}   options (optional) - timeout
    * @param  {Function} cb (optional)
    */
   observe(name, props = {}, options = {}, cb) {
+    this._startFreshIfExpired();
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/observe";
 
@@ -69,13 +71,14 @@ module.exports = class Session {
   /**
    * decide
    * Decision to determine action to take.
-   * 
+   *
    * @param  {string} name - name of event
    * @param  {array} candidates - variations to choose from
    * @param  {Object} options (optional) - timeout and ttl
    * @param  {Function} cb - error and decision
    */
   decide(name, candidates = [], options = {}, cb) {
+    this._startFreshIfExpired();
     options.limit = 1;
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/decide";
@@ -123,7 +126,7 @@ module.exports = class Session {
   /**
    * _formatCandidates
    * Formats the candidates to be in correct format for policy execution
-   * 
+   *
    * @param  {array|object} candidates
    */
   _formatCandidates(candidates) {
@@ -142,9 +145,28 @@ module.exports = class Session {
   }
 
   /**
+   * _startFreshIfExpired
+   * If the ttl indicates that the session has expired, treat this session object as if it were a new session.
+   */
+  _startFreshIfExpired() {
+    if (this.ttl <= 0) {
+      return;
+    }
+    const currentTime = Date.now();
+    if (currentTime <= this.updated + ttl) {
+      return;
+    }
+    // do whatever the constructor does
+    this.id = utils.randomString();
+    this.created = this.updated = currentTime;
+    this.history = [];
+    this.index = 1;
+  }
+
+  /**
    * request
    * Wrapper for sending API requests and managing timeouts and errors
-   * 
+   *
    * @param  {Object} body - request body
    * @param  {Object} options - options passed from observe or decide
    * @param  {Function} cb - callback
@@ -164,7 +186,7 @@ module.exports = class Session {
 
     request({
       method: "POST",
-      url: options.url, 
+      url: options.url,
       body: body,
       timeout: options.timeout,
       json: true
