@@ -32,7 +32,10 @@ module.exports = class Session {
     this.timeout = options.timeout || 1000;
     this.ttl = options.ttl;
     this.index = 1;
-    this.created = this.updated = Date.now();
+    const currentTime = Date.now();
+    this.created = currentTime;
+    this.updated = currentTime;
+
   }
 
   /**
@@ -153,12 +156,13 @@ module.exports = class Session {
       return;
     }
     const currentTime = Date.now();
-    if (currentTime <= this.updated + ttl) {
+    if (currentTime <= this.updated + this.ttl) {
       return;
     }
     // do whatever the constructor does
     this.id = utils.randomString();
-    this.created = this.updated = currentTime;
+    this.created = currentTime;
+    this.updated = currentTime;
     this.history = [];
     this.index = 1;
   }
