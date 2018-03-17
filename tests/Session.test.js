@@ -10,7 +10,7 @@ describe("Session", function(){
 
     it("should make observe call to Amp agent", function(done) {
         session.observe("ObserveTest", {tao:"awesome"}, function(error, response) {
-            if (error) { 
+            if (error) {
                 expect().fail();
                 done();
             }
@@ -22,7 +22,7 @@ describe("Session", function(){
 
     it("should use default decision if call times out", function(done) {
         session.decide("DecideTimeoutTest", {"tao":["awesome", "ok", "worthless"]}, {timeout: 1}, function(error, decision, response) {
-            if (error) { 
+            if (error) {
                 expect().fail();
                 done();
             }
@@ -34,7 +34,7 @@ describe("Session", function(){
 
     it("should return error and default decision immediately if flattened candidates sent in decide are greater than 50", function(done) {
         this.timeout(3000);
-        
+
         let candidates = [];
 
         for (let i = 0; i < 51; i++) {
@@ -61,7 +61,7 @@ describe("Session", function(){
 
             let value = [];
             for (let j = 0; j < 51; j++) {
-              value[j] = j;    
+              value[j] = j;
             }
 
             candidates[key] = value;
@@ -87,7 +87,7 @@ describe("Session", function(){
 
             let value = [];
             for (let j = 0; j < 51; j++) {
-              value[j] = j;    
+              value[j] = j;
             }
 
             candidates[key] = value;
@@ -104,7 +104,7 @@ describe("Session", function(){
 
     it("should single object in decsion callback or synchronously", function(done) {
         session.decide("DecideTimeoutTest", {"tao":["awesome", "ok", "worthless"]}, function(error, decision, response) {
-            if (error) { 
+            if (error) {
                 expect().fail();
             }
 
@@ -127,4 +127,22 @@ describe("Session", function(){
 
         expect(amp.session.userId).to.equal('Yanpu');
     });
+
+    it("should change session id if ttl expires", function (done) {
+        let session1 = new amp.Session();
+        const sessionId = session1.id;
+        session1.ttl = 10000;
+        // ttl shouldn't expire. session id should be the same after observe call.
+        session1.observe("ObserveTest", {tao: "awesome"});
+        expect(session1.id).to.eql(sessionId);
+
+        session1.ttl = 1;
+        session1.updated = Date.now() - 2;
+        // ttl will expire. session id should be be different after observe call.
+        session1.observe("ObserveTest", {tao: "awesome"});
+        expect(session1.id).not.to.eql(sessionId);
+
+        done();
+    });
+
 });

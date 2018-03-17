@@ -49,6 +49,7 @@ module.exports = class Session {
    */
   observe(name, props = {}, options = {}, cb) {
     this._startFreshIfExpired();
+    this.updated = Date.now();
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/observe";
 
@@ -82,6 +83,7 @@ module.exports = class Session {
    */
   decide(name, candidates = [], options = {}, cb) {
     this._startFreshIfExpired();
+    this.updated = Date.now();
     options.limit = 1;
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/decide";
