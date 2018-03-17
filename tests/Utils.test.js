@@ -16,7 +16,7 @@ describe("Utils", function(){
           expect(utils.isFunction(namedFn)).to.be(true);
           expect(utils.isFunction(arrowFn)).to.be(true);
         });
-    
+
         it("utils.isFunction() should return false for primitives / objects / errors / regex / null / undefined", function () {
           expect(utils.isFunction("Asd")).to.be(false);
           expect(utils.isFunction(2)).to.be(false);
@@ -29,12 +29,12 @@ describe("Utils", function(){
           expect(utils.isFunction(undefined)).to.be(false);
           expect(utils.isFunction(null)).to.be(false);
         });
-    
+
         it("utils.isString() should return true for string", function () {
           expect(utils.isString("asdasd")).to.be(true);
           expect(utils.isString("")).to.be(true);
         });
-    
+
         it("utils.isString() should return false for other primitives / objects / errors / regex / functions / null / undefined", function () {
           expect(utils.isString(12)).to.be(false);
           expect(utils.isString(Symbol(1))).to.be(false);
@@ -47,13 +47,13 @@ describe("Utils", function(){
           expect(utils.isString(undefined)).to.be(false);
           expect(utils.isString(null)).to.be(false);
         });
-    
+
         it("utils.isPrimitive() should return true for primitives", function () {
           expect(utils.isPrimitive("asdasd")).to.be(true);
           expect(utils.isPrimitive(2)).to.be(true);
           expect(utils.isPrimitive(true)).to.be(true);
         });
-    
+
         it("utils.isPrimitive() should return false for Symbol / objects / errors / regex / functions / null / undefined", function () {
           expect(utils.isPrimitive(Symbol(1))).to.be(false);
           expect(utils.isPrimitive({})).to.be(false);
@@ -64,13 +64,13 @@ describe("Utils", function(){
           expect(utils.isPrimitive(undefined)).to.be(false);
           expect(utils.isPrimitive(null)).to.be(false);
         });
-    
-    
+
+
         it("utils.isEmpty() should return true for null / undefined", function () {
           expect(utils.isEmpty(undefined)).to.be(true);
           expect(utils.isEmpty(null)).to.be(true);
         });
-    
+
         it("utils.isEmpty() should return false for Symbol / objects / errors / regex / functions / primitives", function () {
           expect(utils.isEmpty(1)).to.be(false);
           expect(utils.isEmpty("asd")).to.be(false);
@@ -82,7 +82,7 @@ describe("Utils", function(){
           expect(utils.isEmpty({})).to.be(false);
           expect(utils.isEmpty([])).to.be(false);
         });
-    
+
         it("utils.isBoolean() should return true for boolean", function () {
           expect(utils.isBoolean(true)).to.be(true);
           expect(utils.isBoolean(false)).to.be(true);
@@ -100,7 +100,7 @@ describe("Utils", function(){
           expect(utils.isBoolean({})).to.be(false);
           expect(utils.isBoolean([])).to.be(false);
         });
-    
+
         it("utils.isJSONSafe should return true for all types without circular", function () {
           expect(utils.isJSONSafe(undefined)).to.be(true);
           expect(utils.isJSONSafe(null)).to.be(true);
@@ -114,17 +114,17 @@ describe("Utils", function(){
           expect(utils.isJSONSafe({})).to.be(true);
           expect(utils.isJSONSafe([])).to.be(true);
         });
-    
+
         it("utils.isJSONSafe should return false for circular objects", function () {
           let a = {a: 1};
           let b = [];
           a.a = a;
           b[0] = b;
-    
+
           expect(utils.isJSONSafe(a)).to.be(false);
           expect(utils.isJSONSafe(b)).to.be(false);
         });
-    });  
+    });
 
     describe("randomString", function() {
         it("should return random strings with length", function() {
@@ -160,7 +160,7 @@ describe("Utils", function(){
     });
 
     describe("combinations", function () {
-        
+
         it("should returns empty array for empty object", function () {
             var result = utils.combinations({});
             expect(result).to.eql([]);

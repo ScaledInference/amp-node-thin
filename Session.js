@@ -9,10 +9,10 @@ const utils = new Utils();
 /**
  * Session
  * Constructs the session object for the Amp instance.
- * 
+ *
  * @constructor
  * @param {Object} options
- * 
+ *
  * Options:
  *  id - id of the session (useful for session continuation)
  *  history - history of events in session
@@ -37,7 +37,7 @@ module.exports = class Session {
   /**
    * observe
    * Observes user context prior to decision and outcomes after the decision.
-   * 
+   *
    * @param  {string}   name - name of event
    * @param  {Object}   props (optional) - properties to observe
    * @param  {Object}   options (optional) - timeout
@@ -69,7 +69,7 @@ module.exports = class Session {
   /**
    * decide
    * Decision to determine action to take.
-   * 
+   *
    * @param  {string} name - name of event
    * @param  {array} candidates - variations to choose from
    * @param  {Object} options (optional) - timeout and ttl
@@ -123,7 +123,7 @@ module.exports = class Session {
   /**
    * _formatCandidates
    * Formats the candidates to be in correct format for policy execution
-   * 
+   *
    * @param  {array|object} candidates
    */
   _formatCandidates(candidates) {
@@ -144,7 +144,7 @@ module.exports = class Session {
   /**
    * request
    * Wrapper for sending API requests and managing timeouts and errors
-   * 
+   *
    * @param  {Object} body - request body
    * @param  {Object} options - options passed from observe or decide
    * @param  {Function} cb - callback
@@ -164,7 +164,7 @@ module.exports = class Session {
 
     request({
       method: "POST",
-      url: options.url, 
+      url: options.url,
       body: body,
       timeout: options.timeout,
       json: true

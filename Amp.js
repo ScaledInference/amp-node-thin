@@ -8,11 +8,11 @@ const utils = new Utils();
 /**
  * Amp
  * Constructs Amp instance with passed configuration.
- * 
+ *
  * @constructor
  * @param {Object} options
- * 
- * Options: 
+ *
+ * Options:
  *  key - project key
  *  domain - domain of Amp server
  *  apiPath - path of API
@@ -51,7 +51,7 @@ module.exports = class Amp {
 
     /**
      * Deserialize a session
-     * 
+     *
      * @param  {string} str
      */
     this.Session.deserialize = function(str) {

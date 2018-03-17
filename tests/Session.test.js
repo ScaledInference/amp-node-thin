@@ -10,7 +10,7 @@ describe("Session", function(){
 
     it("should make observe call to Amp agent", function(done) {
         session.observe("ObserveTest", {tao:"awesome"}, function(error, response) {
-            if (error) { 
+            if (error) {
                 expect().fail();
                 done();
             }
@@ -22,7 +22,7 @@ describe("Session", function(){
 
     it("should use default decision if call times out", function(done) {
         session.decide("DecideTimeoutTest", {"tao":["awesome", "ok", "worthless"]}, {timeout: 1}, function(error, decision, response) {
-            if (error) { 
+            if (error) {
                 expect().fail();
                 done();
             }
@@ -34,7 +34,7 @@ describe("Session", function(){
 
     it("should return error and default decision immediately if flattened candidates sent in decide are greater than 50", function(done) {
         this.timeout(3000);
-        
+
         let candidates = [];
 
         for (let i = 0; i < 51; i++) {
@@ -61,7 +61,7 @@ describe("Session", function(){
 
             let value = [];
             for (let j = 0; j < 51; j++) {
-              value[j] = j;    
+              value[j] = j;
             }
 
             candidates[key] = value;
@@ -87,7 +87,7 @@ describe("Session", function(){
 
             let value = [];
             for (let j = 0; j < 51; j++) {
-              value[j] = j;    
+              value[j] = j;
             }
 
             candidates[key] = value;
@@ -104,7 +104,7 @@ describe("Session", function(){
 
     it("should single object in decsion callback or synchronously", function(done) {
         session.decide("DecideTimeoutTest", {"tao":["awesome", "ok", "worthless"]}, function(error, decision, response) {
-            if (error) { 
+            if (error) {
                 expect().fail();
             }
 
