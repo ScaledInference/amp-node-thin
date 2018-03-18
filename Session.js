@@ -15,7 +15,6 @@ const utils = new Utils();
  *
  * Options:
  *  id - id of the session (useful for session continuation)
- *  history - history of events in session
  *  userId - id of user
  *  timeout - TTL of requests
  *  ttl - TTL for session before a new one is created
@@ -27,7 +26,6 @@ module.exports = class Session {
     if (!this.amp) throw new Error("Not the right way to create a session!");
 
     this.id = options.id || utils.randomString();
-    this.history = options.history || [];
     this.userId = options.userId || utils.randomString(5);
     this.timeout = options.timeout || 1000;
     this.ttl = options.ttl;
@@ -184,8 +182,6 @@ module.exports = class Session {
       if (completed) return;
       completed = true;
 
-      // store into history
-      this.history.push(Object.assign({}, body));
       this.updated = Date.now();
       if (cb) cb.call(this, new Error(EARLY_TERMINATION))
     }, options.timeout);
@@ -200,8 +196,6 @@ module.exports = class Session {
       if (completed) return;
       completed = true;
 
-      // store into history
-      this.history.push(Object.assign({}, body));
       this.updated = Date.now();
       if (cb) cb.call(this, err, response, rbody);
     });
