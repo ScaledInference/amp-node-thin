@@ -29,7 +29,7 @@ session instance initliazed
 // send observe with user information
 session.observe("userInfo", {lang: "en", country: "USA"}, function(err) {
   console.log(`
-UserInfo Observe request sent! ${err ? "Error: " + err : " "}
+UserInfo Observe request sent! ${err ? err : " "}
   `);
 });
 
@@ -44,7 +44,7 @@ session.decide("Template", [
   // decision.color
   // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
+Template Decide request sent! ${err ? err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
 
@@ -57,7 +57,7 @@ session.decide("TemplateCombo", {
   // decision.color
   // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
+Template Decide request sent! ${err ? err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
 
@@ -72,7 +72,7 @@ session.decide("TemplateCombo", {
   // decision.color
   // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
+Template Decide request sent! ${err ? err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
 
@@ -81,6 +81,6 @@ Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stri
 // so we will build the model to help you make better decision on which template should be the best choice for which type of users and will give you the highest or lowest click on `SignUp`
 session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
   console.log(`
-ClickBtn Observe request sent! ${err ? "Error: " + err : " "}
+ClickBtn Observe request sent! ${err ? err : " "}
   `);
 });

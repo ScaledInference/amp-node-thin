@@ -2,7 +2,7 @@
 
 const request = require('request');
 const Utils = require('./Utils');
-const EARLY_TERMINATION = 'EARLY_TERMINATION';
+const EARLY_TERMINATION = 'ETIMEDOUT';
 
 const utils = new Utils();
 
@@ -57,9 +57,9 @@ module.exports = class Session {
       key: this.amp.key
     }, options, (err, response, body) => {
       if (err && err.message === EARLY_TERMINATION) {
-        if (cb) cb(null, body);
-      } else {
         if (cb) cb(err, body);
+      } else {
+        if (cb) cb(null, body);
       }
     });
   }
@@ -104,7 +104,7 @@ module.exports = class Session {
       let defaultDecision = allCandidates[0];
       if (err && err.message === EARLY_TERMINATION) {
         // use default
-        if(cb) cb(null, defaultDecision, body);
+        if(cb) cb(err, defaultDecision, body);
       } else {
         if (err || (!body || !body.index)) {
           if(cb) cb(err, defaultDecision, body);
@@ -148,16 +148,6 @@ module.exports = class Session {
    * @param  {Function} cb - callback
    */
   request(body, options, cb) {
-    // make sure it will be called after timeout
-    let completed;
-    setTimeout(() => {
-      if (completed) return;
-      completed = true;
-
-      this.updated = Date.now();
-      if (cb) cb.call(this, new Error(EARLY_TERMINATION))
-    }, options.timeout);
-
     request({
       method: "POST",
       url: options.url,
@@ -165,8 +155,9 @@ module.exports = class Session {
       timeout: options.timeout,
       json: true
     }, (err, response, rbody) => {
-      if (completed) return;
-      completed = true;
+      if (err && cb) {
+        cb.call(this, err);
+      }
 
       this.updated = Date.now();
       if (cb) cb.call(this, err, response, rbody);
