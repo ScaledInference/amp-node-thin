@@ -28,9 +28,11 @@ session instance initliazed
 
 // send observe with user information
 session.observe("userInfo", {lang: "en", country: "USA"}, function(err) {
-  console.log(`
-UserInfo Observe request sent! ${err ? err : " "}
-  `);
+  if (err) {
+    console.log('UserInfo Observe not sent!', err.message);
+  } else {
+    console.log('UserInfo Observe request sent!');
+  }
 });
 
 // send decide on which color / font template you want to use
@@ -43,9 +45,11 @@ session.decide("Template", [
   // now use the decision
   // decision.color
   // decision.font
-  console.log(`
-Template Decide request sent! ${err ? err : " "} decide: ${JSON.stringify(decision)}
-  `);
+  if (err) {
+    console.log('Template Decide not sent!', err.message);
+  } else {
+    console.log('Template Decide request sent!', JSON.stringify(decision));
+  }
 });
 
 // you can also send with combinations
@@ -56,31 +60,19 @@ session.decide("TemplateCombo", {
   // now use the decision
   // decision.color
   // decision.font
-  console.log(`
-Template Decide request sent! ${err ? err : " "} decide: ${JSON.stringify(decision)}
-  `);
+  if (err) {
+    console.log('TemplateCombo Decide not sent!', err.message);
+  } else {
+    console.log('TemplateCombo Decide request sent!', JSON.stringify(decision));
+  }
 });
-
-// if you want to limit the number of candidates returned, pass a `limit` into the options
-session.decide("TemplateCombo", {
-  color: ["red", "green"],
-  font: ["bold", "italic"]
-}, {
-  limit: 2
-}, function(err, decision) {
-  // now use the decision
-  // decision.color
-  // decision.font
-  console.log(`
-Template Decide request sent! ${err ? err : " "} decide: ${JSON.stringify(decision)}
-  `);
-});
-
 
 // send another observe to observe user interaction to help improve decide
 // so we will build the model to help you make better decision on which template should be the best choice for which type of users and will give you the highest or lowest click on `SignUp`
 session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
-  console.log(`
-ClickBtn Observe request sent! ${err ? err : " "}
-  `);
+  if (err) {
+    console.log('ClickBtn Observe not sent!', err.message);
+  } else {
+    console.log('ClickBtn Observe request sent!');
+  }
 });

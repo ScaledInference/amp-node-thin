@@ -56,10 +56,10 @@ module.exports = class Session {
       index: this.index++,
       key: this.amp.key
     }, options, (err, response, body) => {
-      if (err && err.message === EARLY_TERMINATION) {
-        if (cb) cb(err, body);
+      if (err) {
+        if (cb) cb(err, response, body);
       } else {
-        if (cb) cb(null, body);
+        if (cb) cb(null, response, body);
       }
     });
   }
@@ -102,9 +102,9 @@ module.exports = class Session {
       index: this.index++
     }, options, (err, response, body) => {
       const defaultDecision = allCandidates[0];
-      if (err || (!body || !body.index) {
+      if (err || (!body || !body.index)) {
         // use default
-        if(cb) cb(err, defaultDecision, body);
+        if(cb) cb(err, defaultDecision);
       } else {
         if (cb) cb(null, allCandidates[body.indexes[0]], body);
       }
@@ -150,12 +150,12 @@ module.exports = class Session {
       timeout: options.timeout,
       json: true
     }, (err, response, rbody) => {
-      if (err && cb) {
-        cb.call(this, err);
+      if ((err || response.statusCode !== 200) && cb) {
+        cb.call(this, err || new Error(response.statusCode + ' ' + rbody), response, rbody);
+      } else {
+        this.updated = Date.now();
+        if (cb) cb.call(this, err, response, rbody);
       }
-
-      this.updated = Date.now();
-      if (cb) cb.call(this, err, response, rbody);
     });
   }
 
