@@ -101,17 +101,12 @@ module.exports = class Session {
       },
       index: this.index++
     }, options, (err, response, body) => {
-      let defaultDecision = allCandidates[0];
-      if (err && err.message === EARLY_TERMINATION) {
+      const defaultDecision = allCandidates[0];
+      if (err || (!body || !body.index) {
         // use default
         if(cb) cb(err, defaultDecision, body);
       } else {
-        if (err || (!body || !body.index)) {
-          if(cb) cb(err, defaultDecision, body);
-        } else {
-          let decisions = body.indexes.map(v => allCandidates[v]);
-          if (cb) cb(null, decisions[0], body);
-        }
+        if (cb) cb(null, allCandidates[body.indexes[0]], body);
       }
     });
 
