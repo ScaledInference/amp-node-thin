@@ -9,24 +9,19 @@ describe("Session", function(){
     var session = new amp.Session();
 
     it("should make observe call to Amp agent", function(done) {
-        session.observe("ObserveTest", {tao:"awesome"}, function(error, response) {
+        session.observe("ObserveTest", {tao:"awesome"}, function(error, response, body) {
             if (error) {
                 expect().fail();
                 done();
             }
 
-            expect(response).to.eql({});
+            expect(body).to.eql({});
             done();
         });
     });
 
     it("should use default decision if call times out", function(done) {
-        session.decide("DecideTimeoutTest", {"tao":["awesome", "ok", "worthless"]}, {timeout: 1}, function(error, decision, response) {
-            if (error) {
-                expect().fail();
-                done();
-            }
-
+        session.decide("DecideTimeoutTest", {"tao":["awesome", "ok", "worthless"]}, {timeout: 1}, function(error, decision) {
             expect(decision.tao).to.equal("awesome");
             done();
         });
