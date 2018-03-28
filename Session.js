@@ -2,7 +2,7 @@
 
 const request = require('request');
 const Utils = require('./Utils');
-const EARLY_TERMINATION = 'EARLY_TERMINATION';
+const EARLY_TERMINATION = 'ETIMEDOUT';
 
 const utils = new Utils();
 
@@ -56,10 +56,10 @@ module.exports = class Session {
       index: this.index++,
       key: this.amp.key
     }, options, (err, response, body) => {
-      if (err && err.message === EARLY_TERMINATION) {
-        if (cb) cb(null, body);
+      if (err) {
+        if (cb) cb(err, response, body);
       } else {
-        if (cb) cb(err, body);
+        if (cb) cb(null, response, body);
       }
     });
   }
@@ -101,17 +101,12 @@ module.exports = class Session {
       },
       index: this.index++
     }, options, (err, response, body) => {
-      let defaultDecision = allCandidates[0];
-      if (err && err.message === EARLY_TERMINATION) {
+      const defaultDecision = allCandidates[0];
+      if (err || (!body || !body.index)) {
         // use default
-        if(cb) cb(null, defaultDecision, body);
+        if(cb) cb(err, defaultDecision);
       } else {
-        if (err || (!body || !body.index)) {
-          if(cb) cb(err, defaultDecision, body);
-        } else {
-          let decisions = body.indexes.map(v => allCandidates[v]);
-          if (cb) cb(null, decisions[0], body);
-        }
+        if (cb) cb(null, allCandidates[body.indexes[0]], body);
       }
     });
 
@@ -148,16 +143,6 @@ module.exports = class Session {
    * @param  {Function} cb - callback
    */
   request(body, options, cb) {
-    // make sure it will be called after timeout
-    let completed;
-    setTimeout(() => {
-      if (completed) return;
-      completed = true;
-
-      this.updated = Date.now();
-      if (cb) cb.call(this, new Error(EARLY_TERMINATION))
-    }, options.timeout);
-
     request({
       method: "POST",
       url: options.url,
@@ -165,11 +150,12 @@ module.exports = class Session {
       timeout: options.timeout,
       json: true
     }, (err, response, rbody) => {
-      if (completed) return;
-      completed = true;
-
-      this.updated = Date.now();
-      if (cb) cb.call(this, err, response, rbody);
+      if ((err || response.statusCode !== 200) && cb) {
+        cb.call(this, err || new Error(response.statusCode + ' ' + rbody), response, rbody);
+      } else {
+        this.updated = Date.now();
+        if (cb) cb.call(this, err, response, rbody);
+      }
     });
   }
 
