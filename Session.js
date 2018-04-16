@@ -122,7 +122,7 @@ module.exports = class Session {
    * @param  {Object} options (optional) - timeout
    * @param  {Function} cb - error and decision
    */
-  conditionalDecide(name, event, candidates = [], contexts = [], options = {}, cb) {
+  conditionalDecide(name, candidates = [], event, contexts = [], options = {}, cb) {
     if (!event || event === '') throw new Error('Event name required for conditional decide.');
     if (contexts.length === 0) throw new Error('Contexts required for conditional decide.');
 
