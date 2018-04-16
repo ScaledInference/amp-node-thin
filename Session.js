@@ -157,15 +157,14 @@ module.exports = class Session {
       index: this.index++
     }, options, (err, response, body) => {
       if (err || (!body || !body.indexes)) {
-        // use default
-        if(cb) cb(err, allCandidates[0]);
+        if(cb) cb(err, allCandidates);
       } else {
         const rankedCandidates = body.indexes.map(index => allCandidates[index]);
         if (cb) cb(null, rankedCandidates, body);
       }
     });
 
-    return allCandidates[0];
+    return allCandidates;
   }
 
   /**
