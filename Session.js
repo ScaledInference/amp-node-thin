@@ -101,10 +101,9 @@ module.exports = class Session {
       },
       index: this.index++
     }, options, (err, response, body) => {
-      const defaultDecision = allCandidates[0];
-      if (err || (!body || !body.index)) {
+      if (err || (!body || !body.indexes)) {
         // use default
-        if(cb) cb(err, defaultDecision);
+        if(cb) cb(err, allCandidates[0]);
       } else {
         if (cb) cb(null, allCandidates[body.indexes[0]], body);
       }
@@ -115,29 +114,56 @@ module.exports = class Session {
 
   /**
    * conditionalDecide
-   * Decision option to determine decision to take.
+   * Decision options to determine decision to take.
    *
    * @param  {string} name - name of event
+   * @param  {array} candidates - variations to choose from
    * @param  {array} contexts - contexts to choose from
    * @param  {Object} options (optional) - timeout
    * @param  {Function} cb - error and decision
    */
-  conditionalDecide(name, contexts = [], options = {}, cb) {
+  conditionalDecide(name, candidates = [], contexts = [], options = {}, cb) {
+    if (contexts.length === 0) throw new Error('Contexts required for conditional decide.');
+
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/conditionalDecide";
 
+    const { requestSafeCandidates, allCandidates } = this._formatCandidates(candidates);
+
     if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
+    
+    options.limit ? options.limit : allCandidates.length
+
+    if (allCandidates.length > 50) {
+      if (cb) {
+        cb(new Error("Candidate length must be less than or equal to 50."), allCandidates[0]);
+      }
+
+      return allCandidates[0];
+    }
 
     this.request({
       event: name,
-      contexts: contexts
+      key: this.amp.key,
+      sessionId: this.id,
+      userId: this.userId,
+      contexts: contexts,
+      decision: {
+        candidates: requestSafeCandidates,
+        limit: options.limit
+      },
+      index: this.index++
     }, options, (err, response, body) => {
-      if (err || (!body || !body.index)) {
-        if(cb) cb(err, body.indexes);
+      if (err || (!body || !body.indexes)) {
+        // use default
+        if(cb) cb(err, allCandidates[0]);
       } else {
-        if (cb) cb(null, body.indexes, body);
+        const rankedCandidates = body.indexes.map(index => allCandidates[index]);
+        if (cb) cb(null, rankedCandidates, body);
       }
     });
+
+    return allCandidates[0];
   }
 
   /**
