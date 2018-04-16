@@ -114,7 +114,7 @@ module.exports = class Session {
   }
 
   /**
-   * decideOption
+   * conditionalDecide
    * Decision option to determine decision to take.
    *
    * @param  {string} name - name of event
@@ -122,9 +122,9 @@ module.exports = class Session {
    * @param  {Object} options (optional) - timeout
    * @param  {Function} cb - error and decision
    */
-  decideOption(name, contexts = [], options = {}, cb) {
+  conditionalDecide(name, contexts = [], options = {}, cb) {
     options.timeout = options.timeout || this.timeout;
-    options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/decideOption";
+    options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/conditionalDecide";
 
     if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
 
