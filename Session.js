@@ -143,7 +143,7 @@ module.exports = class Session {
     }
 
     this.request({
-      event: name,
+      name: name,
       key: this.amp.key,
       sessionId: this.id,
       userId: this.userId,
