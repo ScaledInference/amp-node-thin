@@ -124,7 +124,7 @@ module.exports = class Session {
    */
   conditionalDecide(name, candidates = [], event, contexts = [], options = {}, cb) {
     if (!event || event === '') throw new Error('Event name required for conditional decide.');
-    if (contexts.length === 0) throw new Error('Contexts required for conditional decide.');
+    if (!Array.isArray(contexts) || contexts.length === 0) throw new Error('Contexts required for conditional decide.');
 
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/conditionalDecide";
@@ -133,7 +133,7 @@ module.exports = class Session {
 
     if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
     
-    options.limit ? options.limit : allCandidates.length
+    options.limit = options.limit || allCandidates.length
 
     if (allCandidates.length > 50) {
       if (cb) {
