@@ -114,6 +114,33 @@ module.exports = class Session {
   }
 
   /**
+   * decideOption
+   * Decision option to determine decision to take.
+   *
+   * @param  {string} name - name of event
+   * @param  {array} contexts - contexts to choose from
+   * @param  {Object} options (optional) - timeout
+   * @param  {Function} cb - error and decision
+   */
+  decideOption(name, contexts = [], options = {}, cb) {
+    options.timeout = options.timeout || this.timeout;
+    options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/decideOption";
+
+    if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
+
+    this.request({
+      event: name,
+      contexts: contexts
+    }, options, (err, response, body) => {
+      if (err || (!body || !body.index)) {
+        if(cb) cb(err, body.indexes);
+      } else {
+        if (cb) cb(null, body.indexes, body);
+      }
+    });
+  }
+
+  /**
    * _formatCandidates
    * Formats the candidates to be in correct format for policy execution
    *
