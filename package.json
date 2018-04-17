@@ -6,7 +6,7 @@
   "author": "Tao <tao@scaledinference.com>",
   "license": "MIT",
   "scripts": {
-    "example": "node ./examples/example.js ac646ba1c1398b12 http://localhost:8100",
+    "example": "node ./examples/example.js ac646ba1c1398b12 http://amp2-dev-clientsim-0:8100",
     "lint": "eslint ./ --fix",
     "test": "find ./tests -name '*.test.js' | xargs nyc --reporter=html --reporter=text mocha "
   },
