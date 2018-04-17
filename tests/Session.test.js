@@ -123,6 +123,23 @@ describe('Session', function(){
 
     expect(amp.session.userId).to.equal('Yanpu');
   });
+  
+  it('should change session id if ttl expires', function (done) {
+    const session1 = new amp.Session();
+    const sessionId = session1.id;
+    session1.ttl = 10000;
+    // ttl shouldn't expire. session id should be the same after observe call.
+    session1.observe('ObserveTest', {tao: 'awesome'});
+    expect(session1.id).to.eql(sessionId);
+
+    session1.ttl = 1;
+    session1.updated = Date.now() - 2;
+    // ttl will expire. session id should be be different after observe call.
+    session1.observe('ObserveTest', {tao: 'awesome'});
+    expect(session1.id).not.to.eql(sessionId);
+
+    done();
+  });
 
   describe('Conditional decisions', function() {
     it('should return default candidates for each context if > 50', function(done) {
