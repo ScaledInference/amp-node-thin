@@ -47,6 +47,8 @@ describe('Session', function(){
   });
 
   it('should return error and default decision immediately in callback if array value candidates sent in decide are greater than 50', function(done) {
+    this.timeout(3000);
+    
     const candidates = {};
     const keys = ['a', 'b', 'c'];
 
