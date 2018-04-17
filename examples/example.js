@@ -76,3 +76,11 @@ session.observe('ClickBtn', {btnName: 'SignUp'}, function(err) {
     console.log('ClickBtn Observe request sent!');
   }
 });
+
+// if you need to get all of the potential decisions because the context was not available and want to use that decision when it become available, you can use the conditional decide method
+// by sending us the event and context you want decisions on along with your decision event name and candidates
+session.decideCond('TemplateCombo', {color: ['red', 'green'], font: ['bold', 'italic']}, 'Locale', {en: {showModal: true}, es: {showModal: false}}, function(error, decision) {
+  if (err) console.log('TemplateCombo conditional decision not sent!', err.message);
+
+  console.log('TemplateCombo conditional decide sent!  Response was: ', decision);
+});
