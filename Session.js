@@ -119,6 +119,15 @@ module.exports = class Session {
    * @param  {array} contexts - contexts to choose from
    * @param  {Object} options (optional) - timeout
    * @param  {Function} cb - error and decision
+   * 
+   * Input:
+   * contexts: { context1: {prop1: value1, prop2: value2}, context2: {prop1: value1, prop2: value2} }
+   * 
+   * REST Response:
+   * contexts: { context1: [1], context2: [0] } indexes map to candidates
+   * 
+   * Method Return:
+   * contexts: { context1: {color: 'blue'}, context2: {color: 'red'} } indexes are replaced with candidate values
    */
   conditionalDecide(name, candidates = [], event, contexts = {}, options = {}, cb) {
     if (!event || event === '') throw new Error('Event name required for conditional decide.');
@@ -138,7 +147,12 @@ module.exports = class Session {
         cb(new Error('Candidate length must be less than or equal to 50.'), allCandidates[0]);
       }
 
-      return allCandidates[0];
+      const result = {};
+      Object.keys(contexts).forEach(key => {
+        result[key] = allCandidates[0];
+      });
+
+      return result;
     }
 
     this.request({
@@ -156,10 +170,19 @@ module.exports = class Session {
       }
     }, options, (err, response, body) => {
       if (err || (!body || !body.indexes)) {
-        if(cb) cb(err, allCandidates);
+        const result = {};
+        Object.keys(contexts).forEach(key => {
+          result[key] = allCandidates[0];
+        });
+
+        if(cb) cb(err, result);
       } else {
-        const rankedCandidates = body.indexes.map(index => allCandidates[index]);
-        if (cb) cb(null, rankedCandidates, body);
+        const result = {};
+        Object.keys(contexts).forEach(key => {
+          result[key] = allCandidates[body.indexes[key][0]];
+        });
+
+        if (cb) cb(null, result, body);
       }
     });
 
