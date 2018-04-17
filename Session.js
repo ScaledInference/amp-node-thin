@@ -21,6 +21,7 @@ const utils = new Utils();
  */
 module.exports = class Session {
   constructor(options) {
+    // note: if you modify this constructor, please look at _startFreshIfExpired: it might also need modification.
     this.amp = options.amp;
     if (!this.amp) throw new Error("Not the right way to create a session!");
 
@@ -29,7 +30,10 @@ module.exports = class Session {
     this.timeout = options.timeout || 1000;
     this.ttl = options.ttl;
     this.index = 1;
-    this.created = this.updated = Date.now();
+    const currentTime = Date.now();
+    this.created = currentTime;
+    this.updated = currentTime;
+
   }
 
   /**
@@ -42,6 +46,8 @@ module.exports = class Session {
    * @param  {Function} cb (optional)
    */
   observe(name, props = {}, options = {}, cb) {
+    this._startFreshIfExpired();
+    this.updated = Date.now();
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/observe";
 
@@ -74,6 +80,8 @@ module.exports = class Session {
    * @param  {Function} cb - error and decision
    */
   decide(name, candidates = [], options = {}, cb) {
+    this._startFreshIfExpired();
+    this.updated = Date.now();
     options.limit = 1;
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/decide";
@@ -132,6 +140,26 @@ module.exports = class Session {
     }
 
     return res;
+  }
+
+  /**
+   * _startFreshIfExpired
+   * If the ttl indicates that the session has expired, treat this session object as if it were a new session.
+   */
+  _startFreshIfExpired() {
+    if (this.ttl <= 0) {
+      return;
+    }
+    const currentTime = Date.now();
+    if (currentTime <= this.updated + this.ttl) {
+      return;
+    }
+    // do whatever the constructor does
+    this.id = utils.randomString();
+    this.created = currentTime;
+    this.updated = currentTime;
+    this.history = [];
+    this.index = 1;
   }
 
   /**
