@@ -120,9 +120,9 @@ module.exports = class Session {
    * @param  {Object} options (optional) - timeout
    * @param  {Function} cb - error and decision
    */
-  conditionalDecide(name, candidates = [], event, contexts = [], options = {}, cb) {
+  conditionalDecide(name, candidates = [], event, contexts = {}, options = {}, cb) {
     if (!event || event === '') throw new Error('Event name required for conditional decide.');
-    if (!Array.isArray(contexts) || contexts.length === 0) throw new Error('Contexts required for conditional decide.');
+    if (Object.keys(context).length === 0) throw new Error('Contexts required for conditional decide.');
 
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + '/event';
