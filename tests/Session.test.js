@@ -1,7 +1,6 @@
 const expect = require('expect.js');
 
 const Amp = require('../Amp');
-const Session = require('../Session');
 
 describe('Session', function(){
 
@@ -36,7 +35,7 @@ describe('Session', function(){
       candidates.push({a: i, b: i, c: i});
     }
 
-    session.decide('MaxedCandidates', candidates, function(error, decision, response) {
+    session.decide('MaxedCandidates', candidates, function(error, decision) {
       if (error) {
         expect(error.message).to.eql('Candidate length must be less than or equal to 50.');
         expect(decision).to.eql({a:0, b: 0, c: 0});
@@ -62,7 +61,7 @@ describe('Session', function(){
       candidates[key] = value;
     }
 
-    session.decide('MaxedCandidates', candidates, function(error, decision, response) {
+    session.decide('MaxedCandidates', candidates, function(error, decision) {
       if (error) {
         expect(error.message).to.eql('Candidate length must be less than or equal to 50.');
         expect(decision).to.eql({a:0, b: 0, c: 0});
@@ -98,7 +97,7 @@ describe('Session', function(){
   });
 
   it('should single object in decsion callback or synchronously', function(done) {
-    session.decide('DecideTimeoutTest', {'tao':['awesome', 'ok', 'worthless']}, function(error, decision, response) {
+    session.decide('DecideTimeoutTest', {'tao':['awesome', 'ok', 'worthless']}, function(error, decision) {
       if (error) {
         expect().fail();
       }

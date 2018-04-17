@@ -1,7 +1,6 @@
 const expect = require('expect.js');
 
 const Amp = require('../Amp');
-const Session = require('../Session');
 
 describe('Amp', function(){
 
