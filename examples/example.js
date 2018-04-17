@@ -3,7 +3,7 @@ This will demonstrate how to use the node thin client to communicate with amp ag
 `);
 
 // import the Amp library
-const Amp = require("../Amp");
+const Amp = require('../Amp');
 
 // parse the arguments from command line
 // node example.js <key> <domain> <apiPath>
@@ -27,7 +27,7 @@ session instance initliazed
 `);
 
 // send observe with user information
-session.observe("userInfo", {lang: "en", country: "USA"}, function(err) {
+session.observe('userInfo', {lang: 'en', country: 'USA'}, function(err) {
   if (err) {
     console.log('UserInfo Observe not sent!', err.message);
   } else {
@@ -36,11 +36,11 @@ session.observe("userInfo", {lang: "en", country: "USA"}, function(err) {
 });
 
 // send decide on which color / font template you want to use
-session.decide("Template", [
-  {color: "red", font: "bold"},
-  {color: "green", font: "italic"},
-  {color: "red", font: "italic"},
-  {color: "green", font: "bold"}
+session.decide('Template', [
+  {color: 'red', font: 'bold'},
+  {color: 'green', font: 'italic'},
+  {color: 'red', font: 'italic'},
+  {color: 'green', font: 'bold'}
 ], function(err, decision) {
   // now use the decision
   // decision.color
@@ -53,9 +53,9 @@ session.decide("Template", [
 });
 
 // you can also send with combinations
-session.decide("TemplateCombo", {
-  color: ["red", "green"],
-  font: ["bold", "italic"]
+session.decide('TemplateCombo', {
+  color: ['red', 'green'],
+  font: ['bold', 'italic']
 }, function(err, decision) {
   // now use the decision
   // decision.color
@@ -69,7 +69,7 @@ session.decide("TemplateCombo", {
 
 // send another observe to observe user interaction to help improve decide
 // so we will build the model to help you make better decision on which template should be the best choice for which type of users and will give you the highest or lowest click on `SignUp`
-session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
+session.observe('ClickBtn', {btnName: 'SignUp'}, function(err) {
   if (err) {
     console.log('ClickBtn Observe not sent!', err.message);
   } else {

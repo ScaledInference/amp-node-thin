@@ -1,8 +1,7 @@
-"use strict";
+'use strict';
 
 const request = require('request');
 const Utils = require('./Utils');
-const EARLY_TERMINATION = 'ETIMEDOUT';
 
 const utils = new Utils();
 
@@ -22,7 +21,7 @@ const utils = new Utils();
 module.exports = class Session {
   constructor(options) {
     this.amp = options.amp;
-    if (!this.amp) throw new Error("Not the right way to create a session!");
+    if (!this.amp) throw new Error('Not the right way to create a session!');
 
     this.id = options.id || utils.randomString();
     this.userId = options.userId || utils.randomString(5);
@@ -43,7 +42,7 @@ module.exports = class Session {
    */
   observe(name, props = {}, options = {}, cb) {
     options.timeout = options.timeout || this.timeout;
-    options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/observe";
+    options.url = this.amp.domain + this.amp.apiPath + this.amp.key + '/observe';
 
     // if last argument is a function, then it is a callback
     if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
@@ -76,7 +75,7 @@ module.exports = class Session {
   decide(name, candidates = [], options = {}, cb) {
     options.limit = 1;
     options.timeout = options.timeout || this.timeout;
-    options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/decide";
+    options.url = this.amp.domain + this.amp.apiPath + this.amp.key + '/decide';
 
     const { requestSafeCandidates, allCandidates } = this._formatCandidates(candidates);
 
@@ -84,7 +83,7 @@ module.exports = class Session {
 
     if (allCandidates.length > 50) {
       if (cb) {
-        cb(new Error("Candidate length must be less than or equal to 50."), allCandidates[0]);
+        cb(new Error('Candidate length must be less than or equal to 50.'), allCandidates[0]);
       }
 
       return allCandidates[0];
@@ -127,17 +126,17 @@ module.exports = class Session {
     if (!Array.isArray(contexts) || contexts.length === 0) throw new Error('Contexts required for conditional decide.');
 
     options.timeout = options.timeout || this.timeout;
-    options.url = this.amp.domain + this.amp.apiPath + this.amp.key + "/conditionalDecide";
+    options.url = this.amp.domain + this.amp.apiPath + this.amp.key + '/event';
 
     const { requestSafeCandidates, allCandidates } = this._formatCandidates(candidates);
 
     if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
     
-    options.limit = options.limit || allCandidates.length
+    options.limit = options.limit || allCandidates.length;
 
     if (allCandidates.length > 50) {
       if (cb) {
-        cb(new Error("Candidate length must be less than or equal to 50."), allCandidates[0]);
+        cb(new Error('Candidate length must be less than or equal to 50.'), allCandidates[0]);
       }
 
       return allCandidates[0];
@@ -145,16 +144,21 @@ module.exports = class Session {
 
     this.request({
       name: name,
-      event: event,
-      key: this.amp.key,
-      sessionId: this.id,
-      userId: this.userId,
-      contexts: contexts,
       decision: {
         candidates: requestSafeCandidates,
         limit: options.limit
       },
-      index: this.index++
+      userId: this.userId,
+      sessionId: this.id,
+      index: this.index++,
+      conditional_event: {
+        event: event,
+        contexts: contexts
+      },
+      client: {
+        name: 'Node-Thin',
+        version: this.amp.version
+      }
     }, options, (err, response, body) => {
       if (err || (!body || !body.indexes)) {
         if(cb) cb(err, allCandidates);
@@ -174,7 +178,7 @@ module.exports = class Session {
    * @param  {array|object} candidates
    */
   _formatCandidates(candidates) {
-    let res = { allCandidates: [], requestSafeCandidates: [] };
+    const res = { allCandidates: [], requestSafeCandidates: [] };
     if (!candidates) return res;
 
     if (utils.isArray(candidates)) {
@@ -198,7 +202,7 @@ module.exports = class Session {
    */
   request(body, options, cb) {
     request({
-      method: "POST",
+      method: 'POST',
       url: options.url,
       body: body,
       timeout: options.timeout,
