@@ -111,7 +111,7 @@ module.exports = class Session {
   }
 
   /**
-   * conditionalDecide
+   * decideCond
    * Decision options to determine decision to take.
    *
    * @param  {string} name - name of event
@@ -129,7 +129,7 @@ module.exports = class Session {
    * Method Return:
    * contexts: { context1: {color: 'blue'}, context2: {color: 'red'} } indexes are replaced with candidate values
    */
-  conditionalDecide(name, candidates = [], event, contexts = {}, options = {}, cb) {
+  decideCond(name, candidates = [], event, contexts = {}, options = {}, cb) {
     if (!event || event === '') throw new Error('Event name required for conditional decide.');
     if (Object.keys(context).length === 0) throw new Error('Contexts required for conditional decide.');
 
