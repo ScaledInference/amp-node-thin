@@ -134,13 +134,13 @@ module.exports = class Session {
     if (Object.keys(context).length === 0) throw new Error('Contexts required for conditional decide.');
 
     options.timeout = options.timeout || this.timeout;
-    options.url = this.amp.domain + this.amp.apiPath + this.amp.key + '/event';
+    options.url = this.amp.domain + this.amp.apiPath + this.amp.key + '/decideCond';
 
     const { requestSafeCandidates, allCandidates } = this._formatCandidates(candidates);
 
     if (utils.isFunction(arguments[arguments.length - 1])) cb = arguments[arguments.length - 1];
     
-    options.limit = options.limit || allCandidates.length;
+    options.limit = 1;
 
     const defaultResult = Object.keys(contexts).reduce((acc, key) => {
       acc[key] = allCandidates[0];
@@ -149,7 +149,7 @@ module.exports = class Session {
 
     if (allCandidates.length > 50) {
       if (cb) {
-        cb(new Error('Candidate length must be less than or equal to 50.'), allCandidates[0]);
+        cb(new Error('Candidate length must be less than or equal to 50.'), defaultResult);
       }
 
       return defaultResult;

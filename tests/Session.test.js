@@ -73,6 +73,8 @@ describe('Session', function(){
   });
 
   it('should support sync decision making that returns default decision if candidates over 50', function() {
+    this.timeout(3000);
+
     const candidates = {};
     const keys = ['a', 'b', 'c'];
 
@@ -123,12 +125,36 @@ describe('Session', function(){
   });
 
   describe('Conditional decisions', function() {
-    it('should return default candidates for each context if > 50', function() {
+    it('should return default candidates for each context if > 50', function(done) {
+      this.timeout(3000);
 
+      const candidates = {};
+      const keys = ['a', 'b', 'c'];
+
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+
+        const value = [];
+        for (let j = 0; j < 51; j++) {
+          value[j] = j;
+        }
+
+        candidates[key] = value;
+      }
+      
+      session.decideCond('SyncDecide', candidates, 'Locale', {'American': {showModal: true}, 'European': {showModal: false}}, function(error, decision) {
+        expect(decision).to.eql({'American': {a:0, b:0, c:0}, 'European': {a:0, b:0, c:0}});
+        
+        done();
+      });
     });
 
-    it('should return ranked candidates for each context', function() {
-
+    it('should return ranked candidates for each context', function(done) {
+      session.decideCond('SyncDecide', {first: ['a', 'b', 'c'], second: ['d', 'e', 'f']}, 'Locale', {'American': {showModal: true}, 'European': {showModal: false}}, function(error, decision) {
+        expect(decision).to.eql({'American': {first:'a', second: 'd'}, 'European': {first:'a', second: 'd'}});
+        
+        done();
+      });
     });
   });
 });
