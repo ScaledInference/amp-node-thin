@@ -121,4 +121,14 @@ describe('Session', function(){
 
     expect(amp.session.userId).to.equal('Yanpu');
   });
+
+  describe('Conditional decisions', function() {
+    it('should return default candidates for each context if > 50', function() {
+
+    });
+
+    it('should return ranked candidates for each context', function() {
+
+    });
+  });
 });

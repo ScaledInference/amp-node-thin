@@ -147,12 +147,10 @@ module.exports = class Session {
         cb(new Error('Candidate length must be less than or equal to 50.'), allCandidates[0]);
       }
 
-      const result = {};
-      Object.keys(contexts).forEach(key => {
-        result[key] = allCandidates[0];
-      });
-
-      return result;
+      return Object.keys(contexts).reduce((acc, key) => {
+        acc[key] = allCandidates[0];
+        return acc;
+      }, {});
     }
 
     this.request({
@@ -170,17 +168,17 @@ module.exports = class Session {
       }
     }, options, (err, response, body) => {
       if (err || (!body || !body.indexes)) {
-        const result = {};
-        Object.keys(contexts).forEach(key => {
-          result[key] = allCandidates[0];
-        });
+        const result = Object.keys(contexts).reduce((acc, key) => {
+          acc[key] = allCandidates[0];
+          return acc;
+        }, {});
 
         if(cb) cb(err, result);
       } else {
-        const result = {};
-        Object.keys(contexts).forEach(key => {
-          result[key] = allCandidates[body.indexes[key][0]];
-        });
+        const result = Object.keys(contexts).reduce((acc, key) => {
+          acc[key] = allCandidates[body.indexes[key][0]];
+          return acc;
+        }, {});
 
         if (cb) cb(null, result, body);
       }
