@@ -131,7 +131,7 @@ module.exports = class Session {
    */
   decideCond(name, candidates = [], event, contexts = {}, options = {}, cb) {
     if (!event || event === '') throw new Error('Event name required for conditional decide.');
-    if (Object.keys(context).length === 0) throw new Error('Contexts required for conditional decide.');
+    if (Object.keys(contexts).length === 0) throw new Error('Contexts required for conditional decide.');
 
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + '/decideCond';

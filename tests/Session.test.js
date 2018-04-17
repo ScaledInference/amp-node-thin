@@ -142,19 +142,27 @@ describe('Session', function(){
         candidates[key] = value;
       }
       
-      session.decideCond('SyncDecide', candidates, 'Locale', {'American': {showModal: true}, 'European': {showModal: false}}, function(error, decision) {
-        expect(decision).to.eql({'American': {a:0, b:0, c:0}, 'European': {a:0, b:0, c:0}});
-        
-        done();
-      });
+      try {
+        session.decideCond('SyncDecide', candidates, 'Locale', {'American': {showModal: true}, 'European': {showModal: false}}, function(error, decision) {
+          expect(decision).to.eql({'American': {a:0, b:0, c:0}, 'European': {a:0, b:0, c:0}});
+          
+          done();
+        });
+      } catch (e) {
+        expect.fail();
+      }
     });
 
     it('should return ranked candidates for each context', function(done) {
-      session.decideCond('SyncDecide', {first: ['a', 'b', 'c'], second: ['d', 'e', 'f']}, 'Locale', {'American': {showModal: true}, 'European': {showModal: false}}, function(error, decision) {
-        expect(decision).to.eql({'American': {first:'a', second: 'd'}, 'European': {first:'a', second: 'd'}});
-        
-        done();
-      });
+      try {
+        session.decideCond('SyncDecide', {first: ['a', 'b', 'c'], second: ['d', 'e', 'f']}, 'Locale', {'American': {showModal: true}, 'European': {showModal: false}}, function(error, decision) {
+          expect(decision).to.eql({'American': {first:'a', second: 'd'}, 'European': {first:'a', second: 'd'}});
+          
+          done();
+        });
+      } catch (e) {
+        expect.fail();
+      }
     });
   });
 });
