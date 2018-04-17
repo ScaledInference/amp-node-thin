@@ -97,8 +97,7 @@ module.exports = class Session {
       decision: {
         candidates: requestSafeCandidates,
         limit: options.limit
-      },
-      index: this.index++
+      }
     }, options, (err, response, body) => {
       if (err || (!body || !body.indexes)) {
         // use default
@@ -154,10 +153,6 @@ module.exports = class Session {
       conditional_event: {
         event: event,
         contexts: contexts
-      },
-      client: {
-        name: 'Node-Thin',
-        version: this.amp.version
       }
     }, options, (err, response, body) => {
       if (err || (!body || !body.indexes)) {
@@ -201,6 +196,10 @@ module.exports = class Session {
    * @param  {Function} cb - callback
    */
   request(body, options, cb) {
+    body.client = {};
+    body.client.name = 'Node-Thin';
+    body.client.version = this.amp.version;
+
     request({
       method: 'POST',
       url: options.url,
