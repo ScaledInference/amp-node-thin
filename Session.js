@@ -116,9 +116,12 @@ module.exports = class Session {
    *
    * @param  {string} name - name of event
    * @param  {array} candidates - variations to choose from
+   * @param  {string} event - event name of contexts
    * @param  {array} contexts - contexts to choose from
    * @param  {Object} options (optional) - timeout
-   * @param  {Function} cb - error and decision
+   * @callback callback - optional
+   * @param {Error} err
+   * @param {Array} decisions
    * 
    * Input:
    * contexts: { context1: {prop1: value1, prop2: value2}, context2: {prop1: value1, prop2: value2} }
