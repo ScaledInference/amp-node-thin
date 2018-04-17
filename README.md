@@ -28,7 +28,7 @@ const session = new amp.Session();
 ```
 Session objects created by an Amp instance support two methods: `observe` and `decide`.
 
-## session.Observe()
+## session.observe()
 
 The observe method is used to send observations.
 
@@ -58,7 +58,7 @@ The observe method is used to send observations.
 void observe(name, properties, options, callback(err))
 ```
 
-### session.Decide()
+### session.decide()
 The decide method is used to make decisions. 
 
 ``` javascript
@@ -89,6 +89,35 @@ The decide method is used to make decisions.
  * 
  */
 void decide(name, candidates, options, callback(err, decision))
+```
+
+### session.decideCond()
+The decideCond method is used to make conditional decisions.
+
+``` javascript
+/**
+ * decideCond
+ * Decision options to determine decision to take.
+ *
+ * @param  {string} name - name of event
+ * @param  {array} candidates - variations to choose from
+ * @param  {string} event - event name of contexts
+ * @param  {array} contexts - contexts to choose from
+ * @param  {Object} options (optional) - timeout
+ * @callback callback - optional
+ * @param {Error} err
+ * @param {Array} decisions
+ * 
+ * Input:
+ * contexts: { context1: {prop1: value1, prop2: value2}, context2: {prop1: value1, prop2: value2} }
+ * 
+ * REST Response:
+ * contexts: { context1: [1], context2: [0] } indexes map to candidates
+ * 
+ * Method Return:
+ * contexts: { context1: {color: 'blue'}, context2: {color: 'red'} } indexes are replaced with candidate values
+ */
+decideCond(name, candidates = [], event, contexts = {}, options = {}, callback(err, decision))
 ```
 
 ## Example Usage
@@ -172,6 +201,20 @@ session.observe("ClickBtn", {btnName: "SignUp"}, function(err) {
     console.log('ClickBtn Observe not sent!', err.message);
   } else {
     console.log('ClickBtn Observe request sent!');
+  }
+});
+
+
+// if you need to get all of the potential decisions because the context was not available and want to use that decision when it become available, you can use the conditional decide method
+// by sending us the event and context you want decisions on along with your decision event name and candidates
+session.decideCond('TemplateCombo', {color: ['red', 'green'], font: ['bold', 'italic']}, 'Locale', {en: {showModal: true}, es: {showModal: false}}, function(err, decision) {
+  // now use the decision
+  // decision.Locale.en.color and decision.Locale.en.font
+  // decision.Locale.es.color and decision.Locale.es.font
+  if (err) {
+    console.log('TemplateCombo conditional decision not sent!', err.message);
+  } else {
+    console.log('TemplateCombo conditional decide sent!  Response was: ', decision);
   }
 });
 ```

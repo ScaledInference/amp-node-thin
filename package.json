@@ -6,15 +6,22 @@
   "author": "Tao <tao@scaledinference.com>",
   "license": "MIT",
   "scripts": {
-    "example": "node ./examples/example.js d21dce26ffe3f2c3 http://localhost:8100",
+    "example": "node ./examples/example.js ac646ba1c1398b12 http://amp2-dev-clientsim-0:8100",
+    "lint": "eslint ./ --fix",
     "test": "find ./tests -name '*.test.js' | xargs nyc --reporter=html --reporter=text mocha "
   },
   "dependencies": {
-    "request": "^2.83.0"
+    "request": "^2.85.0"
   },
   "devDependencies": {
+    "eslint": "^4.18.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
     "expect.js": "^0.3.1",
-    "mocha": "^3.4.2",
-    "nyc": "^11.0.3"
+    "mocha": "^3.5.3",
+    "nyc": "^11.7.0"
   }
 }

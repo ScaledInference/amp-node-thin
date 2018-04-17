@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // the singleton utils instance
 let utils;
@@ -18,7 +18,7 @@ class Utils {
    * @returns {Boolean}
    */
   isFunction(o) {
-    return typeof o === "function";
+    return typeof o === 'function';
   }
 
   /**
@@ -31,7 +31,7 @@ class Utils {
    * @returns {Boolean}
    */
   isPrimitive(o) {
-    return (typeof o === "number" || typeof o === "string" || typeof o === "boolean");
+    return (typeof o === 'number' || typeof o === 'string' || typeof o === 'boolean');
   }
 
   /**
@@ -42,7 +42,7 @@ class Utils {
    * @returns {Boolean}
    */
   isString(o) {
-    return typeof o === "string";
+    return typeof o === 'string';
   }
 
   /**
@@ -53,7 +53,7 @@ class Utils {
    * @returns {Boolean}
    */
   isNumber (o) {
-    return typeof o === "number";
+    return typeof o === 'number';
   }
 
   /**
@@ -64,7 +64,7 @@ class Utils {
    * @returns {Boolean}
    */
   isBoolean(o) {
-    return typeof o === "boolean";
+    return typeof o === 'boolean';
   }
 
   /**
@@ -86,7 +86,7 @@ class Utils {
    * @returns {Boolean}
    */
   isArray(o) {
-    return Object.prototype.toString.call(o).slice(8).slice(0, -1).toLowerCase() === "array";
+    return Object.prototype.toString.call(o).slice(8).slice(0, -1).toLowerCase() === 'array';
   }
 
   /**
@@ -97,7 +97,7 @@ class Utils {
    * @returns {Boolean}
    */
   isObject(o) {
-    return Object.prototype.toString.call(o).slice(8).slice(0, -1).toLowerCase() === "object";
+    return Object.prototype.toString.call(o).slice(8).slice(0, -1).toLowerCase() === 'object';
   }
 
   /**
@@ -124,7 +124,7 @@ class Utils {
    * @returns {String}
    */
   hashCode(str) {
-    return (str + "").split("").reduce((hash, c) => {
+    return (str + '').split('').reduce((hash, c) => {
       // http://stackoverflow.com/questions/299304/why-does-javas-hashcode-in-string-use-31-as-a-multiplier
       hash = ((hash << 5) - hash) + c.charCodeAt(0);
       return hash & hash; // Convert to 32bit integer
@@ -140,11 +140,11 @@ class Utils {
    * @returns {String}
    */
   randomString(length, charset) {
-    length = length || 16; charset = charset || "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    length = length || 16; charset = charset || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-    let text = "";
-    let salt = "";
-    let saltratio = 0.25;
+    let text = '';
+    let salt = '';
+    const saltratio = 0.25;
 
     let saltLength = Math.floor(length * saltratio);
     let randomTextLength = length - saltLength;
@@ -193,7 +193,7 @@ class Utils {
     keys = keys.sort().reverse();
 
     while (keys.length) {
-      let key = keys.pop();
+      const key = keys.pop();
 
       let values = kvpairs[key];
 
@@ -251,17 +251,17 @@ class Utils {
       // iterate every source object in sources
       sources.forEach(source => {
         if (this.isObject(source) || this.isArray(source)) {
-          for (let key in source) {
+          for (const key in source) {
             if (!source.hasOwnProperty(key)) continue;
 
             // array first
             if (this.isArray(source[key])) {
-              target[key] = this.result(target[key], "array");
+              target[key] = this.result(target[key], 'array');
               this.merge(true, target[key], source[key]);
 
               // plain objects
             } else if (this.isObject(source[key]) && source[key].constructor === Object) {
-              target[key] = this.result(target[key], "object");
+              target[key] = this.result(target[key], 'object');
               this.merge(true, target[key], source[key]);
 
               // for primitive/function/complex objects, just overwrite
@@ -283,7 +283,7 @@ class Utils {
         sources = Array.prototype.slice.call(arguments, 1);
       }
       sources.forEach(source => {
-        for (let key in source) {
+        for (const key in source) {
           if (source.hasOwnProperty(key)) {
             target[key] = source[key];
           }
@@ -322,15 +322,15 @@ class Utils {
    */
   result(o, ensureType, context) {
     if (this.isFunction(o)) o = o.call(context);
-    if (!this.isString(ensureType)) ensureType = "";
+    if (!this.isString(ensureType)) ensureType = '';
 
     ensureType = ensureType.toLowerCase();
 
-    if (ensureType === "array") {
+    if (ensureType === 'array') {
       return this.isArray(o) ? o : [];
-    } else if (ensureType === "object") {
+    } else if (ensureType === 'object') {
       return this.isObject(o) ? o : {};
-    } else if (ensureType === "number") {
+    } else if (ensureType === 'number') {
       return parseFloat(o);
     }
 
