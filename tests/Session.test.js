@@ -4,7 +4,7 @@ const Amp = require('../Amp');
 
 describe('Session', function(){
 
-  const amp = new Amp( {key: 'ac646ba1c1398b12', userId: 'ThinNodeTest', domain: 'https://dev.amp.ai', sessionTTL: 5000} );
+  const amp = new Amp( {key: '3017f11895d66f82', userId: 'ThinNodeTest', domain: 'https://dev.amp.ai', sessionTTL: 5000} );
   const session = new amp.Session();
 
   it('should make observe call to Amp agent', function(done) {

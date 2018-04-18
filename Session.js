@@ -184,7 +184,7 @@ module.exports = class Session {
         if(cb) cb(err, defaultResult);
       } else {
         const result = Object.keys(contexts).reduce((acc, key) => {
-          acc[key] = allCandidates[body.indexes[key][0]];
+          acc[key] = allCandidates[body.indexes[key]];
           return acc;
         }, {});
 
