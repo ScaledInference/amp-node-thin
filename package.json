@@ -6,7 +6,12 @@
   "author": "Tao <tao@scaledinference.com>",
   "license": "MIT",
   "scripts": {
+<<<<<<< Updated upstream
     "example": "node ./examples/example.js d21dce26ffe3f2c3 http://localhost:8100",
+=======
+    "example": "node -i ./examples/example.js 3017f11895d66f82 http://localhost:8100",
+    "lint": "eslint ./ --fix",
+>>>>>>> Stashed changes
     "test": "find ./tests -name '*.test.js' | xargs nyc --reporter=html --reporter=text mocha "
   },
   "dependencies": {
