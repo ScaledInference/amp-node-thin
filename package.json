@@ -1,25 +1,36 @@
 {
-  "name": "amp-node-thin",
-  "version": "1.0.5",
+  "name": "amp-node",
+  "version": "1.1.0",
   "main": "Amp.js",
   "repository": "git@github.com:ScaledInference/amp-node-thin.git",
   "author": "Tao <tao@scaledinference.com>",
   "license": "MIT",
   "scripts": {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     "example": "node ./examples/example.js d21dce26ffe3f2c3 http://localhost:8100",
 =======
     "example": "node -i ./examples/example.js 3017f11895d66f82 http://localhost:8100",
     "lint": "eslint ./ --fix",
 >>>>>>> Stashed changes
+=======
+    "example": "node ./examples/example.js 3017f11895d66f82 http://amp2-dev-clientsim-0:8100",
+    "lint": "eslint ./ --fix",
+>>>>>>> master
     "test": "find ./tests -name '*.test.js' | xargs nyc --reporter=html --reporter=text mocha "
   },
   "dependencies": {
-    "request": "^2.83.0"
+    "request": "^2.85.0"
   },
   "devDependencies": {
+    "eslint": "^4.18.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
     "expect.js": "^0.3.1",
-    "mocha": "^3.4.2",
-    "nyc": "^11.0.3"
+    "mocha": "^3.5.3",
+    "nyc": "^11.7.0"
   }
 }

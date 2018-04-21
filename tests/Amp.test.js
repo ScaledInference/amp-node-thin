@@ -1,17 +1,16 @@
-const expect = require("expect.js");
+const expect = require('expect.js');
 
-const Amp = require("../Amp");
-const Session = require("../Session");
+const Amp = require('../Amp');
 
-describe("Amp", function(){
+describe('Amp', function(){
 
-    var amp = new Amp( {key: "ac646ba1c1398b12", userId: "ThinNodeTest", domain: "https://dev.amp.ai", sessionTTL: 5000} );
-    var session = new amp.Session();
+  const amp = new Amp( {key: '3017f11895d66f82', userId: 'ThinNodeTest', domain: 'https://dev.amp.ai', sessionTTL: 5000} );
+  const session = new amp.Session();
 
-    it("should be able to serialize/deserialize a session", function() {
-        var serializedSession = session.serialize();
-        var newSession = new amp.Session(serializedSession);
+  it('should be able to serialize/deserialize a session', function() {
+    const serializedSession = session.serialize();
+    const newSession = new amp.Session(serializedSession);
 
-        expect(session.id).to.equal(newSession.id);
-    });
+    expect(session.id).to.equal(newSession.id);
+  });
 });

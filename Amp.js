@@ -1,27 +1,41 @@
-"use strict";
+'use strict';
 
-const Session = require("./Session");
-const Utils = require("./Utils");
+const Session = require('./Session');
+const Version = require('./Version');
 
-const utils = new Utils();
-
+/**
+ * Amp
+ * Constructs Amp instance with passed configuration.
+ *
+ * @constructor
+ * @param {Object} options
+ *
+ * Options:
+ *  key - project key
+ *  domain - domain of Amp server
+ *  apiPath - path of API
+ *  sessionTTL - TTL for session
+ *  timeout - TTL for requests
+ *
+ */
 module.exports = class Amp {
   constructor(options = {}) {
     this.key = options.key;
-    if (!this.key) throw new Error("Project Key Needed!");
+    if (!this.key) throw new Error('Project Key Needed!');
 
-    this.apiPath = options.apiPath || "/api/core/v1/";
-    this.domain = options.domain || "https://amp.ai";
+    this.apiPath = options.apiPath || '/api/core/v1/';
+    this.domain = options.domain || 'https://amp.ai';
     this.options = options;
     this.timeout = options.timeout;
+    this.version = Version;
 
     // the Session Constructor
-    let _this = this;
+    const _this = this;
     this.Session = function(sessionOptions = {}) {
-      let opts = Object.assign({}, sessionOptions);
+      const opts = Object.assign({}, sessionOptions);
 
       // resume
-      if (typeof sessionOptions === "string") {
+      if (typeof sessionOptions === 'string') {
         return _this.Session.deserialize(sessionOptions);
       }
 
@@ -32,16 +46,16 @@ module.exports = class Amp {
       opts.ttl = sessionOptions.ttl || _this.options.sessionTTL || 0;
 
       return new Session(opts);
-    }
+    };
 
     /**
      * Deserialize a session
-     * 
+     *
      * @param  {string} str
      */
     this.Session.deserialize = function(str) {
       try {
-        let resumed = JSON.parse(str);
+        const resumed = JSON.parse(str);
         if ((resumed.updated && resumed.ttl) && (Date.now() - resumed.updated < resumed.ttl)) {
           return new Session(Object.assign(resumed, { amp: _this }));
         } else {
@@ -50,6 +64,6 @@ module.exports = class Amp {
       } catch(e) {
         return new _this.Session();
       }
-    }
+    };
   }
 };
