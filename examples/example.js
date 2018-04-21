@@ -126,14 +126,14 @@ async function demo() {
     await sleep(1000);
     // if you need to get all of the potential decisions because the context was not available and want to use that decision when it become available, you can use the conditional decide method
     // by sending us the event and context you want decisions on along with your decision event name and candidates
-    session.decideCond('BlaBla', {
+    session.decideCond('ConditionalDecide', {
         color: ['red', 'green'],
         font: ['bold', 'italic']
     }, 'Locale', {en: {showModal: true}, es: {showModal: false}}, function (err, decision) {
         if (err) {
-            console.log('BlaBla conditional decision not sent!', err.message);
+            console.log('ConditionalDecide conditional decision not sent!', err.message);
         } else {
-            console.log('BlaBla conditional decide sent!  Response was: ', decision);
+            console.log('ConditionalDecide conditional decide sent!  Response was: ', decision);
         }
     });
     await sleep(1000);
