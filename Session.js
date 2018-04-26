@@ -55,11 +55,7 @@ module.exports = class Session {
 
     this.request({
       name: name,
-      sessionId: this.id,
-      userId: this.userId,
-      properties: props,
-      index: this.index++,
-      key: this.amp.key
+      properties: props
     }, options, (err, response, body) => {
       if (err) {
         if (cb) cb(err, response, body);
@@ -99,9 +95,6 @@ module.exports = class Session {
 
     this.request({
       name: name,
-      key: this.amp.key,
-      sessionId: this.id,
-      userId: this.userId,
       decision: {
         candidates: requestSafeCandidates,
         limit: options.limit
@@ -172,9 +165,6 @@ module.exports = class Session {
         candidates: requestSafeCandidates,
         limit: options.limit
       },
-      userId: this.userId,
-      sessionId: this.id,
-      index: this.index++,
       conditional_event: {
         event: event,
         contexts: contexts
@@ -248,6 +238,10 @@ module.exports = class Session {
     body.client = {};
     body.client.name = 'Node-Thin';
     body.client.version = this.amp.version;
+    body.ts = Date.now();
+    body.sessionId = this.id;
+    body.userId = this.userId;
+    body.index = this.index++;
 
     request({
       method: 'POST',
