@@ -45,6 +45,7 @@ module.exports = class Session {
    * @param  {Function} cb (optional)
    */
   observe(name, props = {}, options = {}, cb) {
+    const ts = Date.now();
     this._startFreshIfExpired();
     this.updated = Date.now();
     options.timeout = options.timeout || this.timeout;
@@ -56,7 +57,7 @@ module.exports = class Session {
     this.request({
       name: name,
       properties: props
-    }, options, (err, response, body) => {
+    }, options, ts, (err, response, body) => {
       if (err) {
         if (cb) cb(err, response, body);
       } else {
@@ -75,8 +76,9 @@ module.exports = class Session {
    * @param  {Function} cb - error and decision
    */
   decide(name, candidates = [], options = {}, cb) {
+    const ts = Date.now();
     this._startFreshIfExpired();
-    this.updated = Date.now();
+    this.updated = ts;
     options.limit = 1;
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + '/decide';
@@ -99,7 +101,7 @@ module.exports = class Session {
         candidates: requestSafeCandidates,
         limit: options.limit
       }
-    }, options, (err, response, body) => {
+    }, options, ts, (err, response, body) => {
       if (err || (!body || !body.indexes)) {
         // use default
         if(cb) cb(err, allCandidates[0]);
@@ -134,6 +136,7 @@ module.exports = class Session {
    * contexts: { context1: {color: 'blue'}, context2: {color: 'red'} } indexes are replaced with candidate values
    */
   decideCond(name, candidates = [], event, contexts = {}, options = {}, cb) {
+    const ts = Date.now();
     if (!event || event === '') throw new Error('Event name required for conditional decide.');
     if (Object.keys(contexts).length === 0) throw new Error('Contexts required for conditional decide.');
 
@@ -169,7 +172,7 @@ module.exports = class Session {
         event: event,
         contexts: contexts
       }
-    }, options, (err, response, body) => {
+    }, options, ts, (err, response, body) => {
       if (err || (!body || !body.indexes)) {
         if(cb) cb(err, defaultResult);
       } else {
@@ -232,13 +235,14 @@ module.exports = class Session {
    *
    * @param  {Object} body - request body
    * @param  {Object} options - options passed from observe or decide
+   * @param  {Object} ts - timestamp
    * @param  {Function} cb - callback
    */
-  request(body, options, cb) {
+  request(body, options, ts, cb) {
     body.client = {};
     body.client.name = 'Node-Thin';
     body.client.version = this.amp.version;
-    body.ts = Date.now();
+    body.ts = ts;
     body.sessionId = this.id;
     body.userId = this.userId;
     body.index = this.index++;
