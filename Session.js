@@ -47,7 +47,7 @@ module.exports = class Session {
   observe(name, props = {}, options = {}, cb) {
     const ts = Date.now();
     this._startFreshIfExpired();
-    this.updated = Date.now();
+    this.updated = ts;
     options.timeout = options.timeout || this.timeout;
     options.url = this.amp.domain + this.amp.apiPath + this.amp.key + '/observe';
 
