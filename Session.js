@@ -27,7 +27,7 @@ module.exports = class Session {
 
     this.id = options.id || utils.randomString();
     this.userId = options.userId || utils.randomString(5);
-    this.timeout = options.timeout || 1000;
+    this.timeout = options.timeout || 30 * 1000;
     this.ttl = options.ttl;
     this.index = 1;
     const currentTime = Date.now();
