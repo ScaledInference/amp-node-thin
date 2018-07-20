@@ -253,7 +253,7 @@ module.exports = class Session {
       .timeout({
         response: options.timeout
       })
-      .retry(1)
+      .retry(2)
       .send(body)
       .end((err, response) => {
         if ((err || response.statusCode !== 200) && cb) {
