@@ -251,6 +251,7 @@ module.exports = class Session {
       method: 'POST',
       url: options.url,
       body: body,
+      headers: {'connection': 'keep-alive'},
       timeout: options.timeout,
       json: true
     }, (err, response, rbody) => {
