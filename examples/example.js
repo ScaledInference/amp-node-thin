@@ -15,7 +15,7 @@ const apiPath = process.argv[4];
 const amp = new Amp({key: projectKey, domain: domain, apiPath: apiPath});
 
 console.log(`
-amp instance initialized
+amp instance initialized, ${JSON.stringify(amp)}
 `);
 
 // create a session instance
@@ -23,13 +23,13 @@ amp instance initialized
 const session = new amp.Session();
 
 console.log(`
-session instance initialized
+session instance initialized, ${JSON.stringify(session)}
 `);
 
 // send observe with user information
 session.observe('userInfo', {lang: 'en', country: 'USA'}, function(err) {
   if (err) {
-    console.log('UserInfo Observe not sent!', err.message);
+    console.log('UserInfo Observe not sent!', JSON.stringify(err.message));
   } else {
     console.log('UserInfo Observe request sent!');
   }
@@ -46,7 +46,7 @@ session.decide('Template', [
   // decision.color
   // decision.font
   if (err) {
-    console.log('Template Decide not sent!', err.message);
+    console.log('Template Decide not sent!', JSON.stringify(err.message));
   } else {
     console.log('Template Decide request sent!', JSON.stringify(decision));
   }
@@ -61,7 +61,7 @@ session.decide('TemplateCombo', {
   // decision.color
   // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
+TemplateCombo Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
 
@@ -76,7 +76,7 @@ session.decide("TemplateCombo", {
   // decision.color
   // decision.font
   console.log(`
-Template Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
+TemplateCombo Decide request sent! ${err ? "Error: " + err : " "} decide: ${JSON.stringify(decision)}
   `);
 });
 

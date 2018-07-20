@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "example": "node ./examples/example.js 3017f11895d66f82 http://amp2-dev-clientsim-0:8100",
+    "init": "gcloud compute ssh --ssh-flag=\"-L 8100:127.0.0.1:8100\"  amp2-dev-clientsim-0",
     "lint": "eslint ./ --fix",
     "test": "find ./tests -name '*.test.js' | xargs nyc --reporter=html --reporter=text mocha "
   },
