@@ -1,4 +1,3 @@
-examples/example.js
 coverage/*
 .vscode/*
 .nyc_output/*
