@@ -6,12 +6,12 @@
   "author": "Tao <tao@scaledinference.com>",
   "license": "MIT",
   "scripts": {
-    "example": "node ./examples/example.js 3017f11895d66f82 http://amp2-dev-clientsim-0:8100",
+    "example": "node ./examples/example.js YOU_PROJECT_KEY AMP_AGENT_URL",
     "lint": "eslint ./ --fix",
     "test": "find ./tests -name '*.test.js' | xargs nyc --reporter=html --reporter=text mocha "
   },
   "dependencies": {
-    "request": "^2.85.0"
+    "superagent": "^3.8.3"
   },
   "devDependencies": {
     "eslint": "^4.18.1",

@@ -1,6 +1,7 @@
 'use strict';
 
-const request = require('request');
+const superRequest =require('superagent');
+
 const Utils = require('./Utils');
 
 const utils = new Utils();
@@ -26,7 +27,7 @@ module.exports = class Session {
 
     this.id = options.id || utils.randomString();
     this.userId = options.userId || utils.randomString(5);
-    this.timeout = options.timeout || 1000;
+    this.timeout = options.timeout || 30 * 1000;
     this.ttl = options.ttl;
     this.index = 1;
     const currentTime = Date.now();
@@ -247,20 +248,20 @@ module.exports = class Session {
     body.userId = this.userId;
     body.index = this.index++;
 
-    request({
-      method: 'POST',
-      url: options.url,
-      body: body,
-      timeout: options.timeout,
-      json: true
-    }, (err, response, rbody) => {
-      if ((err || response.statusCode !== 200) && cb) {
-        cb.call(this, err || new Error(response.statusCode + ' ' + rbody), response, rbody);
-      } else {
-        this.updated = Date.now();
-        if (cb) cb.call(this, err, response, rbody);
-      }
-    });
+    superRequest
+      .post(options.url)
+      .timeout({
+        response: options.timeout
+      })
+      .send(body)
+      .end((err, response) => {
+        if ((err || response.statusCode !== 200) && cb) {
+          cb.call(this, err || new Error(response.statusCode + ' ' + JSON.stringify(response.body)), response);
+        } else {
+          this.updated = Date.now();
+          if (cb) cb.call(this, err, response);
+        }
+      });
   }
 
   /**
