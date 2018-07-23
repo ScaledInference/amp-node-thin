@@ -11,6 +11,7 @@
     "test": "find ./tests -name '*.test.js' | xargs nyc --reporter=html --reporter=text mocha "
   },
   "dependencies": {
+    "http2": "^3.3.7",
     "superagent": "^3.8.3"
   },
   "devDependencies": {

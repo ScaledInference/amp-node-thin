@@ -1,6 +1,6 @@
 'use strict';
 
-const superRequest =require('superagent');
+const http2 =require('http2');
 
 const Utils = require('./Utils');
 
@@ -248,20 +248,30 @@ module.exports = class Session {
     body.userId = this.userId;
     body.index = this.index++;
 
-    superRequest
-      .post(options.url)
-      .timeout({
-        response: options.timeout
-      })
-      .send(body)
-      .end((err, response) => {
-        if ((err || response.statusCode !== 200) && cb) {
-          cb.call(this, err || new Error(response.statusCode + ' ' + JSON.stringify(response.body)), response);
-        } else {
-          this.updated = Date.now();
-          if (cb) cb.call(this, err, response);
-        }
-      });
+    const client = http2.connect(body.domain);
+
+    const req = client.request({
+      ':path': body.apiPath
+    });
+    req.on('response', (headers, flags) => {
+      console.log(`flags ${flags}`);
+    });
+
+    let data = '';
+    req.on('data', chunk => { data += chunk; });
+    req.on('error', (err) => {
+      if (cb) {
+        cb.call(this, err);
+      }
+    });
+    req.on('end', () => {
+      const res = JSON.parse(data);
+      this.updated = Date.now();
+      if (cb) cb.call(this, null, res);
+
+      client.close();
+    });
+    req.end();
   }
 
   /**
