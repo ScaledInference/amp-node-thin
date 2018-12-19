@@ -2,6 +2,9 @@ const Amp = require('../Amp');
 
 console.log('This will demonstrate how to use the node thin client to communicate with amp agent. Make sure you pass in a valid project key and valid amp agent url.'); // eslint-disable-line no-console
 
+const projectKey = process.argv[2]; //eslint-disable-line
+const ampAgents = process.argv.slice(3); //eslint-disable-line
+
 const ampMultipleSessionTest = async (key, agents) => {
   const amp = new Amp(key, agents, 10000, 15*60);
   const { Session } = amp;
@@ -37,7 +40,6 @@ const ampMultipleSessionTest = async (key, agents) => {
     console.log('Observe successfully sent to amp-agent.');// eslint-disable-line no-console
   }
 
-
   // Creating second session of amp
   const session2 = new Session({timeOutMilliseconds: 1});
   context = { browser_height: 1000, browser_width : 480 };
@@ -67,4 +69,4 @@ const ampMultipleSessionTest = async (key, agents) => {
   }
 };
 
-ampMultipleSessionTest('98f3c5cdb920c361', ['http://localhost:8100']);
+ampMultipleSessionTest(projectKey, ampAgents);
