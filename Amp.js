@@ -14,7 +14,7 @@ const utils = new Utils();
  * @param  {boolean} dontUseTokens - flag to indicate either generate amptoken automatically or use the custom token.
  *
  */
-module.exports  = class AmpV2 {
+module.exports  = class Amp {
 
   constructor(key, ampAgents = [], timeOutMilliseconds = 100000 /* default 10 seconds*/, sessionLifeTimeSeconds = 1800 /* default 30 minutes */, dontUseTokens = false ){
     this.apiPath = 'api/core/v2';
