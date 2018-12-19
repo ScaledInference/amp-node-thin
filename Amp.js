@@ -1,4 +1,3 @@
-const axios = require('axios');
 const Session = require('./Session');
 const Utils = require('./Utils');
 
@@ -63,21 +62,6 @@ module.exports  = class AmpV2 {
 
     this.customToken = 'CUSTOM';
     this.dontUseTokens = dontUseTokens;
-  }
-
-  testConnection(){
-    this.ampAgents.map( (aa) => {
-      const agentUrl = `${aa}/test/update_from_spa/${this.key}/?session_life_time=${this.sessionLifeTime}`;
-      axios.get(agentUrl)
-        .then(response => {
-          response.status === 200 ?
-            console.info(`Connected to ampAgent ${aa}.`) :
-            console.error(`Please provide valid ampAgent url ${aa}.`);
-        })
-        .catch(err => {
-          console.error(`Error occurred while connecting to Amp Agent ${aa}, because ${err.message}`);
-        });
-    });
   }
 
   getDecideWithContextUrl(userId){

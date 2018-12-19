@@ -346,7 +346,7 @@ class Utils {
    */
   generateRandomAlphNumericString (length = 16) {
     const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    return [...Array(length).keys()].reduce((text, v) => { return text += charSet.charAt(Math.random()*charSet.length); }, '');
+    return [...Array(length).keys()].reduce((text, v) => { return text += charSet.charAt(Math.random()*charSet.length); }, ''); // eslint-disable-line no-unused-vars
   }
 }
 

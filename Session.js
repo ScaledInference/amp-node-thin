@@ -53,8 +53,8 @@ module.exports = class SessionV2 {
    *
    */
   decideWithContext(contextName, context={},
-                    decisionName, candidates,
-                    timeout) {
+    decisionName, candidates,
+    timeout) {
 
     if(utils.isEmpty(contextName)) {
       throw new Error('Context name cannot be empty');
