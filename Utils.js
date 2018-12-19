@@ -13,8 +13,8 @@ class Utils {
   /*
    * isFunction
    * Check whether target is a function or not.
-   * 
-   * @param {*} o 
+   *
+   * @param {*} o
    * @returns {Boolean}
    */
   isFunction(o) {
@@ -24,10 +24,10 @@ class Utils {
   /**
    * isPrimitive
    * Check whether target is a primitive or not, true for `string`, `number`, `boolean`.
-   * 
+   *
    * TODO: should contain `symbol` or not?
-   * 
-   * @param {*} o 
+   *
+   * @param {*} o
    * @returns {Boolean}
    */
   isPrimitive(o) {
@@ -37,8 +37,8 @@ class Utils {
   /**
    * isString
    * Check whether target is a string or not.
-   * 
-   * @param {*} o 
+   *
+   * @param {*} o
    * @returns {Boolean}
    */
   isString(o) {
@@ -48,7 +48,7 @@ class Utils {
   /**
    * isNumber
    * Check whether target is a number or not.
-   * 
+   *
    * @param {*} o
    * @returns {Boolean}
    */
@@ -59,7 +59,7 @@ class Utils {
   /**
    * isBoolean
    * Check whether target is a boolean or not.
-   * 
+   *
    * @param {*} o
    * @returns {Boolean}
    */
@@ -70,8 +70,8 @@ class Utils {
   /**
    * isEmpty
    * Check whether target is either undefined or null.
-   * 
-   * @param {*} o 
+   *
+   * @param {*} o
    * @returns {Boolean}
    */
   isEmpty(o) {
@@ -81,8 +81,8 @@ class Utils {
   /**
    * isArray
    * Check whether target is truly an array.
-   * 
-   * @param {*} o 
+   *
+   * @param {*} o
    * @returns {Boolean}
    */
   isArray(o) {
@@ -92,8 +92,8 @@ class Utils {
   /**
    * isObject
    * Check whether target is truly an object.
-   * 
-   * @param {*} o 
+   *
+   * @param {*} o
    * @returns {Boolean}
    */
   isObject(o) {
@@ -103,8 +103,8 @@ class Utils {
   /**
    * isJSONSafe
    * Check whether target can be used with `JSON.stringify` or not.
-   * 
-   * @param {*} o 
+   *
+   * @param {*} o
    * @returns {Boolean}
    */
   isJSONSafe(o) {
@@ -119,8 +119,8 @@ class Utils {
   /**
    * hashCode
    * Generate hash code from a string.
-   * 
-   * @param {Stirng} str 
+   *
+   * @param {Stirng} str
    * @returns {String}
    */
   hashCode(str) {
@@ -134,9 +134,9 @@ class Utils {
   /**
    * randomString
    * Generate random string from an charset, length can be specified.
-   * 
-   * @param {Number} length 
-   * @param {String} charset 
+   *
+   * @param {Number} length
+   * @param {String} charset
    * @returns {String}
    */
   randomString(length, charset) {
@@ -222,7 +222,7 @@ class Utils {
 
   /**
    * merge
-   * 
+   *
    * @param {Boolean} [deep] - deep merge mode
    * @param {Object} target - target object of the merging
    * @param {...Object} source - source objects of the merging
@@ -296,7 +296,7 @@ class Utils {
   /**
    * deepMerge
    * A short cut of `merge` with recursively enabled by default.
-   * 
+   *
    * @returns {Object}
    */
   deepMerge() {
@@ -307,7 +307,7 @@ class Utils {
   /**
    *
    * result
-   * 
+   *
    * @param {*} o - can be any thing, if function, will resolve before going to next step
    * @param {String} [ensureType] - expected type
    * @param {Object} [context] - context used if o is function
@@ -335,6 +335,18 @@ class Utils {
     }
 
     return o;
+  }
+
+  /**
+   * generateRandomAlphNumericString
+   * Generate random string from the default charset and specified length.
+   *
+   * @param {Number} length
+   * @returns {String}
+   */
+  generateRandomAlphNumericString (length = 16) {
+    const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    return [...Array(length).keys()].reduce((text, v) => { return text += charSet.charAt(Math.random()*charSet.length); }, '');
   }
 }
 

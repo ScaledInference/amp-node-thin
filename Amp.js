@@ -1,69 +1,100 @@
-'use strict';
-
+const axios = require('axios');
 const Session = require('./Session');
-const Version = require('./Version');
+const Utils = require('./Utils');
 
+const utils = new Utils();
 /**
+ *
  * Amp
  * Constructs Amp instance with passed configuration.
- *
  * @constructor
- * @param {Object} options
- *
- * Options:
- *  key - project key
- *  domain - domain of Amp server
- *  apiPath - path of API
- *  sessionTTL - TTL for session
- *  timeout - TTL for requests
+ * @param  {string} key - project key
+ * @param  {Array} ampAgents - list of ampAgents
+ * @param  {int} timeOutMilliseconds - request timeOut in milliSeconds default 10 seconds
+ * @param  {int} sessionLifeTimeSeconds - session life time in Seconds default 30 minutes
+ * @param  {boolean} dontUseTokens - flag to indicate either generate amptoken automatically or use the custom token.
  *
  */
-module.exports = class Amp {
-  constructor(options = {}) {
-    this.key = options.key;
-    if (!this.key) throw new Error('Project Key Needed!');
+module.exports  = class AmpV2 {
 
-    this.apiPath = options.apiPath || '/api/core/v1/';
-    this.domain = options.domain || 'https://amp.ai';
-    this.options = options;
-    this.timeout = options.timeout;
-    this.version = Version;
+  constructor(key, ampAgents = [], timeOutMilliseconds = 100000 /* default 10 seconds*/, sessionLifeTimeSeconds = 1800 /* default 30 minutes */, dontUseTokens = false ){
+    this.apiPath = 'api/core/v2';
+    if( utils.isEmpty(key)){
+      throw new Error('key can\'t be empty');
+    }
+    this.key = key;
 
-    // the Session Constructor
-    const _this = this;
-    this.Session = function(sessionOptions = {}) {
+    if(timeOutMilliseconds < 0){
+      throw new Error('timeOut must be non-negative');
+    }else if(timeOutMilliseconds === 0 ){
+      this.timeOut = timeOutMilliseconds;
+    }
+    this.timeOut = timeOutMilliseconds;
+
+    if(sessionLifeTimeSeconds < 0){
+      throw new Error('sessionLifeTime must be non-negative');
+    }else if (sessionLifeTimeSeconds === 0){
+      this.sessionLifeTime = 1800000; // 30 MINUTES
+    }
+    this.sessionLifeTime = 1000 * sessionLifeTimeSeconds;
+
+    if(ampAgents.length === 0){
+      throw new Error('ampAgents can\'t be empty');
+    }
+    this.ampAgents =  ampAgents;
+
+    const self = this;
+    this.Session = function(sessionOptions={}){
       const opts = Object.assign({}, sessionOptions);
-
-      // resume
-      if (typeof sessionOptions === 'string') {
-        return _this.Session.deserialize(sessionOptions);
-      }
-
-      opts.amp = _this;
-      opts.id = sessionOptions.id;
-      opts.userId = sessionOptions.userId || _this.options.userId;
-      opts.timeout = sessionOptions.timeout || _this.timeout || 30 * 1000;
-      opts.ttl = sessionOptions.ttl || _this.options.sessionTTL || 0;
-
+      opts.amp = self;
+      opts.userId =  sessionOptions.userId || utils.generateRandomAlphNumericString();
+      opts.sessionId = sessionOptions.sessionId || utils.generateRandomAlphNumericString();
+      opts.ampToken =  self.dontUseTokens
+        ? self.customToken
+        : !sessionOptions.ampToken
+          ? ''
+          : sessionOptions.ampToken;
+      opts.timeOutMilliseconds = sessionOptions.timeOutMilliseconds || self.timeOut;
+      opts.sessionLifeTimeSeconds = sessionOptions.sessionLifeTimeSeconds
+        ? 1000 * sessionOptions.sessionLifeTimeSeconds
+        : self.sessionLifeTime;
       return new Session(opts);
     };
 
-    /**
-     * Deserialize a session
-     *
-     * @param  {string} str
-     */
-    this.Session.deserialize = function(str) {
-      try {
-        const resumed = JSON.parse(str);
-        if ((resumed.updated && resumed.ttl) && (Date.now() - resumed.updated < resumed.ttl)) {
-          return new Session(Object.assign(resumed, { amp: _this }));
-        } else {
-          return new _this.Session();
-        }
-      } catch(e) {
-        return new _this.Session();
-      }
-    };
+    this.customToken = 'CUSTOM';
+    this.dontUseTokens = dontUseTokens;
   }
+
+  testConnection(){
+    this.ampAgents.map( (aa) => {
+      const agentUrl = `${aa}/test/update_from_spa/${this.key}/?session_life_time=${this.sessionLifeTime}`;
+      axios.get(agentUrl)
+        .then(response => {
+          response.status === 200 ?
+            console.info(`Connected to ampAgent ${aa}.`) :
+            console.error(`Please provide valid ampAgent url ${aa}.`);
+        })
+        .catch(err => {
+          console.error(`Error occurred while connecting to Amp Agent ${aa}, because ${err.message}`);
+        });
+    });
+  }
+
+  getDecideWithContextUrl(userId){
+    return `${this.selectAmpAgent(userId)}/${this.apiPath}/${this.key}/decideWithContextV2`;
+  }
+
+  getDecideUrl(userId){
+    return `${this.selectAmpAgent(userId)}/${this.apiPath}/${this.key}/decideV2`;
+  }
+
+  getObserveUrl(userId){
+    return `${this.selectAmpAgent(userId)}/${this.apiPath}/${this.key}/observeV2`;
+  }
+
+  selectAmpAgent(userId){
+    return this.ampAgents[Math.abs(utils.hashCode(userId) % this.ampAgents.length)];
+  }
+
 };
+
