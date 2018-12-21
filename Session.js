@@ -231,7 +231,7 @@ module.exports = class SessionV2 {
 
   _getCandidatesAtIndex(candidates, index) {
     let partial = index;
-    return Object.keys(candidates).reduce((results, key) => {
+    return Object.keys(candidates).sort((a,b) => a < b).reduce((results, key) => {
       const values = candidates[key];
       results[key] = values[ partial % values.length];
       partial =  Math.floor(partial / values.length);
