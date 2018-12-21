@@ -8,9 +8,8 @@ const ampAgents = process.argv.slice(3); //eslint-disable-line
 
 const ampSingleSessionTest = async (key, agents) => {
   const amp = new Amp(key, agents);
-  const { Session } = amp;
 
-  const firstSession = new Session();
+  const firstSession = new amp.Session();
   const context = { browser_height: 1740, browser_width : 360 };
   const candidates = {color:['red', 'green', 'blue'], count:[10, 100]};
 
@@ -30,7 +29,7 @@ const ampSingleSessionTest = async (key, agents) => {
   }
 
   console.log('Calling firstSession.observe, with default timeout');// eslint-disable-line no-console
-  const observeResponse = await firstSession.observe('NodeObserveMetric',context, 0);
+  const observeResponse = await firstSession.observe('NodeObserveMetric',context);
   console.log(`Returned ampToken \n ${observeResponse.ampToken} \n of length ${observeResponse.ampToken.length}`);// eslint-disable-line no-console
   if(!observeResponse.success){
     console.log('Observe NOT successfully sent to amp-agent.');// eslint-disable-line no-console
@@ -38,6 +37,7 @@ const ampSingleSessionTest = async (key, agents) => {
   }else{
     console.log('Observe successfully sent to amp-agent.');// eslint-disable-line no-console
   }
+
 };
 
 

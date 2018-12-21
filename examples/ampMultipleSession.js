@@ -7,10 +7,9 @@ const ampAgents = process.argv.slice(3); //eslint-disable-line
 
 const ampMultipleSessionTest = async (key, agents) => {
   const amp = new Amp(key, agents, 10000, 15*60);
-  const { Session } = amp;
 
   // Creating First Session of amp
-  const session1 = new Session({ timeOutMilliseconds: 1000, sessionLifeTimeSeconds: 60*1000});
+  const session1 = new amp.Session({ timeOutMilliseconds: 1000, sessionLifeTimeSeconds: 60*1000});
   let context = { browser_height: 1740, browser_width : 360 };
   const candidates = {color:['red', 'green', 'blue'], count:[10, 100]};
 
@@ -41,7 +40,7 @@ const ampMultipleSessionTest = async (key, agents) => {
   }
 
   // Creating second session of amp
-  const session2 = new Session({timeOutMilliseconds: 1});
+  const session2 = new amp.Session({timeOutMilliseconds: 1});
   context = { browser_height: 1000, browser_width : 480 };
   console.log('Calling session2.decideWithContext with 1 millisecond timeout');// eslint-disable-line no-console
   response = await session2.decideWithContext(
