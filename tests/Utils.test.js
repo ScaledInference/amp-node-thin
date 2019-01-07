@@ -27,8 +27,8 @@ describe('Utils', function(){
 
   describe('Generate Random String', function(){
     it('should return random strings with different length', function(){
-      const string1 = utils.generateRandomAlphNumericString();
-      const string2 = utils.generateRandomAlphNumericString(10);
+      const string1 = utils.generateRandomAlphaNumericString();
+      const string2 = utils.generateRandomAlphaNumericString(10);
       expect(string1.length).to.equal(16);
       expect(string2.length).to.equal(10);
       expect(string1).to.not.equal(string2);

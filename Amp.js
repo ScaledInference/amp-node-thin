@@ -46,8 +46,8 @@ module.exports  = class Amp {
     this.Session = function(sessionOptions={}){
       const opts = Object.assign({}, sessionOptions);
       opts.amp = self;
-      opts.userId =  sessionOptions.userId || utils.generateRandomAlphNumericString();
-      opts.sessionId = sessionOptions.sessionId || utils.generateRandomAlphNumericString();
+      opts.userId =  sessionOptions.userId || utils.generateRandomAlphaNumericString();
+      opts.sessionId = sessionOptions.sessionId || utils.generateRandomAlphaNumericString();
       opts.ampToken =  self.dontUseTokens
         ? self.customToken
         : !sessionOptions.ampToken

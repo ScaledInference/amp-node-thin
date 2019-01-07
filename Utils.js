@@ -48,13 +48,13 @@ class Utils {
   }
 
   /**
-   * generateRandomAlphNumericString
+   * generateRandomAlphaNumericString
    * Generate random string from the default charset and specified length.
    *
    * @param {Number} length
    * @returns {String}
    */
-  generateRandomAlphNumericString (length = 16) {
+  generateRandomAlphaNumericString (length = 16) {
     const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     return [...Array(length).keys()].reduce((text, v) => { return text += charSet.charAt(Math.random()*charSet.length); }, ''); // eslint-disable-line no-unused-vars
   }

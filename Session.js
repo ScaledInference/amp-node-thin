@@ -25,8 +25,8 @@ module.exports = class SessionV2 {
     this.amp = options.amp;
     if(utils.isEmpty(this.amp))
       throw new Error('Please pass valid amp instance.');
-    this.userId = options.userId || utils.generateRandomAlphNumericString();
-    this.sessionId = options.sessionId || utils.generateRandomAlphNumericString();
+    this.userId = options.userId || utils.generateRandomAlphaNumericString();
+    this.sessionId = options.sessionId || utils.generateRandomAlphaNumericString();
     this.ampToken = options.ampToken;
     this.timeOut = options.timeOutMilliseconds || this.amp.timeOut;
     this.sessionLifeTime = options.sessionLifeTimeSeconds || this.amp.sessionLifeTime;
