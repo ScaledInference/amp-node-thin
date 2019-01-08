@@ -65,9 +65,6 @@ module.exports = class SessionV2 {
     if(!utils.isObject(candidates)){
       throw new Error('Candidates strictly has to be object of key being string and value being Array');
     }
-    if( this._getCandidateCombinationCount(candidates) > 50) {
-      throw new Error('Can\'t have more than 50 candidates');
-    }
 
     if(utils.isEmpty(timeout) || timeout <= 0){
       timeout = this.timeOut;
@@ -83,9 +80,13 @@ module.exports = class SessionV2 {
       }
     };
     const reqJSON = JSON.stringify(Object.assign(this._getBaseFields(), specificFields));
+    const count = this._getCandidateCombinationCount(candidates);
     return this._asDecideResponse(
       this.amp.getDecideWithContextUrl(this.userId),
-      reqJSON, () => this._getCandidatesAtIndex(candidates,0), timeout
+      reqJSON,
+      () => this._getCandidatesAtIndex(candidates,0),
+      count,
+      timeout
     );
   }
 
@@ -139,9 +140,6 @@ module.exports = class SessionV2 {
     if(!utils.isObject(candidates)){
       throw new Error('Candidates strictly has to be object of key being string and value being Array');
     }
-    if( this._getCandidateCombinationCount(candidates) > 50) {
-      throw new Error('Can\'t have more than 50 candidates');
-    }
 
     if(utils.isEmpty(timeout) || timeout <= 0){
       timeout = this.timeOut;
@@ -154,19 +152,26 @@ module.exports = class SessionV2 {
       }
     };
     const reqJSON = JSON.stringify(Object.assign(this._getBaseFields(), specificFields));
+    const count = this._getCandidateCombinationCount(candidates);
     return this._asDecideResponse(
       this.amp.getDecideUrl(this.userId),
-      reqJSON, () => this._getCandidatesAtIndex(candidates,0), timeout
+      reqJSON, () => this._getCandidatesAtIndex(candidates,0),
+      count,
+      timeout
     );
   }
 
-  async _asDecideResponse(url, reqJson, decisionFn, timeout){
+  async _asDecideResponse(url, reqJson, decisionFn, candidatesCount, timeout){
     const decideResponse = {
       decision: decisionFn(),
       fallback: true,
       ampToken: this.ampToken
     };
     try {
+      if(candidatesCount > 50) {
+        decideResponse.failureReason = 'Cant have more than 50 candidates';
+        return decideResponse;
+      }
       const response = await axios.post(url, reqJson, {timeout});
       if(response.status === 200) {
         const { decision, ampToken, fallback, failureReason } = response.data;

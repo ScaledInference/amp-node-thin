@@ -17,7 +17,7 @@ describe('Session Test Suite', function(){
         expect(response.decision).to.equal('{"color":"red","count":10}');
         done();
       })
-      .catch(error => {
+      .catch(error => { // eslint-disable-line no-unused-vars
         expect().fail();
         done();
       });
@@ -34,8 +34,7 @@ describe('Session Test Suite', function(){
         expect(response.decision).to.eql({ count: 10, color: 'red' });
         done();
       })
-      .catch( error => {
-        console.log('Error:', error);
+      .catch( error => { // eslint-disable-line no-unused-vars
         expect().fail();
         done();
       });
@@ -49,16 +48,24 @@ describe('Session Test Suite', function(){
         expect(response.ampToken).to.equal('');
         expect(response.decision).to.eql({ count: 10, color: 'red' });
         done();
+      })
+      .catch(error => { // eslint-disable-line no-unused-vars
+        expect().fail();
+        done();
       });
   });
 
   it('should return error for candidates count more than 50', function(done){
     const cands = {color:['red', 'green', 'blue'], count:[10, 20, 30, 40, 50], coatSize:['XS', 'S', 'M', 'L', 'XL']};
     session.decideWithContext('AmpSession', context, 'NodeDecisionWithContextTest', cands, 3000)
-      .catch(error => {
-        console.log('Error :', error.toString());
+      .then(response => {
+        expect(response.fallback).to.be(true);
+        expect(response.failureReason).to.eql('Cant have more than 50 candidates');
+        expect(response.decision).to.eql({ count: 10, color: 'red', coatSize: 'XS' });
+        done();
+      })
+      .catch(error => { // eslint-disable-line no-unused-vars
         expect().fail();
-        // expect(error).to.not.empty();
         done();
       });
   });
