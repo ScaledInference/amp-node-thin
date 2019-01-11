@@ -1,3 +1,4 @@
+const version = require('./Version');
 const Session = require('./Session');
 const Utils = require('./Utils');
 
@@ -41,6 +42,9 @@ module.exports  = class Amp {
       throw new Error('ampAgents can\'t be empty');
     }
     this.ampAgents =  ampAgents;
+    this.dontUseTokens = dontUseTokens;
+    this.customToken = 'CUSTOM';
+    this.version = version;
 
     const self = this;
     this.Session = function(sessionOptions={}){
@@ -50,35 +54,15 @@ module.exports  = class Amp {
       opts.sessionId = sessionOptions.sessionId || utils.generateRandomAlphaNumericString();
       opts.ampToken =  self.dontUseTokens
         ? self.customToken
-        : !sessionOptions.ampToken
-          ? ''
-          : sessionOptions.ampToken;
+        : sessionOptions.ampToken
+          ? sessionOptions.ampToken
+          : '';
       opts.timeOutMilliseconds = sessionOptions.timeOutMilliseconds || self.timeOut;
       opts.sessionLifeTimeSeconds = sessionOptions.sessionLifeTimeSeconds
         ? 1000 * sessionOptions.sessionLifeTimeSeconds
         : self.sessionLifeTime;
       return new Session(opts);
     };
-
-    this.customToken = 'CUSTOM';
-    this.dontUseTokens = dontUseTokens;
   }
-
-  getDecideWithContextUrl(userId){
-    return `${this.selectAmpAgent(userId)}/${this.apiPath}/${this.key}/decideWithContextV2`;
-  }
-
-  getDecideUrl(userId){
-    return `${this.selectAmpAgent(userId)}/${this.apiPath}/${this.key}/decideV2`;
-  }
-
-  getObserveUrl(userId){
-    return `${this.selectAmpAgent(userId)}/${this.apiPath}/${this.key}/observeV2`;
-  }
-
-  selectAmpAgent(userId){
-    return this.ampAgents[Math.abs(utils.hashCode(userId) % this.ampAgents.length)];
-  }
-
 };
 

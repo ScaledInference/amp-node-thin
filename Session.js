@@ -19,18 +19,23 @@ const utils = new Utils();
  *
  */
 
-module.exports = class SessionV2 {
+module.exports = class Session {
 
-  constructor(options) {
-    this.amp = options.amp;
-    if(utils.isEmpty(this.amp))
+  constructor(options = {}) {
+    if(utils.isEmpty(options.amp))
       throw new Error('Please pass valid amp instance.');
+    this.amp = options.amp;
     this.userId = options.userId || utils.generateRandomAlphaNumericString();
     this.sessionId = options.sessionId || utils.generateRandomAlphaNumericString();
     this.ampToken = options.ampToken;
     this.timeOut = options.timeOutMilliseconds || this.amp.timeOut;
     this.sessionLifeTime = options.sessionLifeTimeSeconds || this.amp.sessionLifeTime;
     this.index = 1;
+
+    const selectedAmpAgent = this.amp.ampAgents[Math.abs(utils.hashCode(this.userId) % this.amp.ampAgents.length)];
+    this.decideContextUrl = `${selectedAmpAgent}/${this.amp.apiPath}/${this.amp.key}/decideWithContextV2`;
+    this.decideUrl = `${selectedAmpAgent}/${this.amp.apiPath}/${this.amp.key}/decideV2`;
+    this.observeUrl = `${selectedAmpAgent}/${this.amp.apiPath}/${this.amp.key}/observeV2`;
   }
 
   /**
@@ -53,8 +58,7 @@ module.exports = class SessionV2 {
    *
    */
   decideWithContext(contextName, context={},
-    decisionName, candidates,
-    timeout) {
+    decisionName, candidates, timeout) {
 
     if(utils.isEmpty(contextName)) {
       throw new Error('Context name cannot be empty');
@@ -82,7 +86,7 @@ module.exports = class SessionV2 {
     const reqJSON = JSON.stringify(Object.assign(this._getBaseFields(), specificFields));
     const count = this._getCandidateCombinationCount(candidates);
     return this._asDecideResponse(
-      this.amp.getDecideWithContextUrl(this.userId),
+      this.decideContextUrl,
       reqJSON,
       () => this._getCandidatesAtIndex(candidates,0),
       count,
@@ -114,7 +118,7 @@ module.exports = class SessionV2 {
       properties: context
     };
     const reqJSON = JSON.stringify(Object.assign(this._getBaseFields(), specificFields));
-    return this._asObserveResponse(this.amp.getObserveUrl(this.userId), reqJSON, timeout);
+    return this._asObserveResponse(this.observeUrl, reqJSON, timeout);
   }
 
   /**
@@ -154,7 +158,7 @@ module.exports = class SessionV2 {
     const reqJSON = JSON.stringify(Object.assign(this._getBaseFields(), specificFields));
     const count = this._getCandidateCombinationCount(candidates);
     return this._asDecideResponse(
-      this.amp.getDecideUrl(this.userId),
+      this.decideUrl,
       reqJSON, () => this._getCandidatesAtIndex(candidates,0),
       count,
       timeout

@@ -40,7 +40,7 @@ describe('Session Test Suite', function(){
       });
   });
 
-  it('should return failureReason error with default decision if timout is pretty small such as 1 millisecond', function(done){
+  it('should return failureReason error with default decision if timeout is pretty small such as 1 millisecond', function(done){
     session2.decideWithContext('AmpSession', context, 'NodeDecisionWithContextTest', candidates)
       .then(response => {
         expect(response.fallback).to.be(true);
