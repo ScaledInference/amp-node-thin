@@ -11,7 +11,7 @@
     "test": "find ./tests -name '*.test.js' | xargs nyc --reporter=html --reporter=text mocha "
   },
   "dependencies": {
-    "superagent": "^3.8.3"
+    "axios": "^0.18.0"
   },
   "devDependencies": {
     "eslint": "^4.18.1",

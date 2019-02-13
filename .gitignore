@@ -68,3 +68,6 @@ typings/
 # VSCode
 .vscode
 
+# Intellij
+.idea
+

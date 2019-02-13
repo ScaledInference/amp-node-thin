@@ -1,187 +1,72 @@
 const expect = require('expect.js');
-
 const Amp = require('../Amp');
 
-describe('Session', function(){
-
-  const amp = new Amp( {key: '3017f11895d66f82', userId: 'ThinNodeTest', domain: 'https://dev.amp.ai', sessionTTL: 5000} );
+describe('Session Test Suite', function(){
+  const amp = new Amp('98f3c5cdb920c361',['http://localhost:8100']);
   const session = new amp.Session();
+  const session2 = new amp.Session({timeOutMilliseconds: 1});
+  const context = { browser_height: 1740, browser_width : 360 };
+  const candidates = {color:['red', 'green', 'blue'], count:[10, 100]};
 
-  it('should make observe call to Amp agent', function(done) {
-    session.observe('ObserveTest', {tao:'awesome'}, function(error, response, body) {
-      if (error) {
+  it('should make decideWithContext call to Amp Agent', function(done){
+
+    session.decideWithContext('AmpSession', context, 'NodeDecisionWithContextTest', candidates, 3000)
+      .then(response => {
+        expect(response.ampToken).to.not.empty();
+        expect(response.fallback).to.be(false);
+        expect(response.decision).to.equal('{"color":"red","count":10}');
+        done();
+      })
+      .catch(error => { // eslint-disable-line no-unused-vars
         expect().fail();
         done();
-      }
-
-      expect(body).to.eql({});
-      done();
-    });
+      });
   });
 
-  it('should use default decision if call times out', function(done) {
-    session.decide('DecideTimeoutTest', {'tao':['awesome', 'ok', 'worthless']}, {timeout: 1}, function(error, decision) {
-      expect(decision.tao).to.equal('awesome');
-      done();
-    });
-  });
-
-  it('should return error and default decision immediately if flattened candidates sent in decide are greater than 50', function(done) {
-    this.timeout(3000);
-
-    const candidates = [];
-
-    for (let i = 0; i < 51; i++) {
-      candidates.push({a: i, b: i, c: i});
-    }
-
-    session.decide('MaxedCandidates', candidates, function(error, decision) {
-      if (error) {
-        expect(error.message).to.eql('Candidate length must be less than or equal to 50.');
-        expect(decision).to.eql({a:0, b: 0, c: 0});
-      } else {
+  it('should return failureReason error with default decision for in correct ampagent url', function(done){
+    const incorrectAmpAgent =  new Amp('98f3c5cdb920c361',['http://localhost:8080']);
+    const ses = new incorrectAmpAgent.Session();
+    ses.decideWithContext('AmpSession', context, 'NodeDecisionWithContextTest', candidates, 3000)
+      .then(response => {
+        expect(response.fallback).to.be(true);
+        expect(response.failureReason).to.not.empty();
+        expect(response.ampToken).to.equal('');
+        expect(response.decision).to.eql({ count: 10, color: 'red' });
+        done();
+      })
+      .catch( error => { // eslint-disable-line no-unused-vars
         expect().fail();
-      }
-      done();
-    });
+        done();
+      });
   });
 
-  it('should return error and default decision immediately in callback if array value candidates sent in decide are greater than 50', function(done) {
-    this.timeout(3000);
-    
-    const candidates = {};
-    const keys = ['a', 'b', 'c'];
-
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-
-      const value = [];
-      for (let j = 0; j < 51; j++) {
-        value[j] = j;
-      }
-
-      candidates[key] = value;
-    }
-
-    session.decide('MaxedCandidates', candidates, function(error, decision) {
-      if (error) {
-        expect(error.message).to.eql('Candidate length must be less than or equal to 50.');
-        expect(decision).to.eql({a:0, b: 0, c: 0});
-      } else {
+  it('should return failureReason error with default decision if timeout is pretty small such as 1 millisecond', function(done){
+    session2.decideWithContext('AmpSession', context, 'NodeDecisionWithContextTest', candidates)
+      .then(response => {
+        expect(response.fallback).to.be(true);
+        expect(response.failureReason).to.not.empty();
+        expect(response.ampToken).to.equal('');
+        expect(response.decision).to.eql({ count: 10, color: 'red' });
+        done();
+      })
+      .catch(error => { // eslint-disable-line no-unused-vars
         expect().fail();
-      }
-      done();
-    });
+        done();
+      });
   });
 
-  it('should support sync decision making that returns default decision if candidates over 50', function() {
-    this.timeout(3000);
-
-    const candidates = {};
-    const keys = ['a', 'b', 'c'];
-
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-
-      const value = [];
-      for (let j = 0; j < 51; j++) {
-        value[j] = j;
-      }
-
-      candidates[key] = value;
-    }
-
-    const decision = session.decide('SyncMaxedCandidates', candidates);
-    expect(decision).to.eql({a:0, b: 0, c: 0});
-  });
-
-  it('should support sync decision making that returns default decision if candidates under 50', function() {
-    const decision = session.decide('SyncDecide', {first: ['a', 'b', 'c'], second: ['d', 'e', 'f']});
-    expect(decision).to.eql({first: 'a', second: 'd'});
-  });
-
-  it('should single object in decsion callback or synchronously', function(done) {
-    session.decide('DecideTimeoutTest', {'tao':['awesome', 'ok', 'worthless']}, function(error, decision) {
-      if (error) {
+  it('should return error for candidates count more than 50', function(done){
+    const cands = {color:['red', 'green', 'blue'], count:[10, 20, 30, 40, 50], coatSize:['XS', 'S', 'M', 'L', 'XL']};
+    session.decideWithContext('AmpSession', context, 'NodeDecisionWithContextTest', cands, 3000)
+      .then(response => {
+        expect(response.fallback).to.be(true);
+        expect(response.failureReason).to.eql('Cant have more than 50 candidates');
+        expect(response.decision).to.eql({ count: 10, color: 'red', coatSize: 'XS' });
+        done();
+      })
+      .catch(error => { // eslint-disable-line no-unused-vars
         expect().fail();
-      }
-
-      expect(decision.tao).to.equal('awesome');
-      done();
-    });
-  });
-
-  it('should ignore limit option and always set to 1', function(done) {
-    const decision = session.decide('SyncDecide', {first: ['a', 'b', 'c'], second: ['d', 'e', 'f']}, {limit: 2}, function(error, decision) {
-      expect(decision).to.eql({first: 'a', second: 'd'});
-      done();
-    });
-
-    expect(decision).to.eql({first: 'a', second: 'd'});
-  });
-
-  it('should allow setting userId', function() {
-    amp.session = new amp.Session({userId: 'Yanpu'});
-
-    expect(amp.session.userId).to.equal('Yanpu');
-  });
-  
-  it('should change session id if ttl expires', function (done) {
-    const session1 = new amp.Session();
-    const sessionId = session1.id;
-    session1.ttl = 10000;
-    // ttl shouldn't expire. session id should be the same after observe call.
-    session1.observe('ObserveTest', {tao: 'awesome'});
-    expect(session1.id).to.eql(sessionId);
-
-    session1.ttl = 1;
-    session1.updated = Date.now() - 2;
-    // ttl will expire. session id should be be different after observe call.
-    session1.observe('ObserveTest', {tao: 'awesome'});
-    expect(session1.id).not.to.eql(sessionId);
-
-    done();
-  });
-
-  describe('Conditional decisions', function() {
-    it('should return default candidates for each context if > 50', function(done) {
-      this.timeout(3000);
-
-      const candidates = {};
-      const keys = ['a', 'b', 'c'];
-
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-
-        const value = [];
-        for (let j = 0; j < 51; j++) {
-          value[j] = j;
-        }
-
-        candidates[key] = value;
-      }
-      
-      try {
-        session.decideCond('SyncDecide', candidates, 'Locale', {'American': {showModal: true}, 'European': {showModal: false}}, function(error, decision) {
-          expect(decision).to.eql({'American': {a:0, b:0, c:0}, 'European': {a:0, b:0, c:0}});
-          
-          done();
-        });
-      } catch (e) {
-        expect.fail();
-      }
-    });
-
-    it('should return ranked candidates for each context', function(done) {
-      try {
-        session.decideCond('SyncDecide', {first: ['a', 'b', 'c'], second: ['d', 'e', 'f']}, 'Locale', {'American': {showModal: true}, 'European': {showModal: false}}, function(error, decision) {
-          expect(decision).to.eql({'American': {first:'a', second: 'd'}, 'European': {first:'a', second: 'd'}});
-          
-          done();
-        });
-      } catch (e) {
-        expect.fail();
-      }
-    });
+        done();
+      });
   });
 });
